@@ -1,0 +1,38 @@
+module.exports = {
+    env: {
+        browser: true,
+        es2021: true,
+    },
+    extends: [
+        'airbnb',
+        'airbnb-typescript',
+        'airbnb/hooks',
+        'plugin:react/recommended',
+        'plugin:@typescript-eslint/recommended',
+    ],
+    overrides: [],
+    parser: '@typescript-eslint/parser',
+    parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        tsconfigRootDir: __dirname,
+        project: 'tsconfig.json',
+    },
+    ignorePatterns: ['vite.config.ts'],
+    plugins: ['react', '@typescript-eslint'],
+    rules: {
+        'react/react-in-jsx-scope': 0,
+        'no-console': 0,
+        'no-param-reassign': 0,
+        'functional/no-conditional-statement': 0,
+        'functional/no-conditional-statements': 0,
+        'functional/no-expression-statements': 0,
+        "@typescript-eslint/no-explicit-any": 0,
+        'functional/functional-parameters': 0,
+        'functional/no-try-statement': 0,
+        'functional/no-throw-statement': 0,
+        '@typescript-eslint/default-param-last': 'off',
+        'no-underscore-dangle': [2, { "allow": ["__filename", "__dirname", "__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"] }],
+        'react/function-component-definition': [2, { "namedComponents": "arrow-function" }],
+    },
+};
