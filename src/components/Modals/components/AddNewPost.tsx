@@ -1,7 +1,6 @@
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { setCloseModal } from '../../../store/modalsSlice';
-import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
+import { useAppDispatch } from '../../../hooks/hooks';
 import AddPostForm from '../../Forms/addPostForm/AddPostForm';
 
 const AddNewPost = () => {

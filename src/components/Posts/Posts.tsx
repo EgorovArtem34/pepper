@@ -17,6 +17,7 @@ import SortingPosts from '../SortingPost/SortingPost';
 const Posts = () => {
   const dispatch = useAppDispatch();
   const selectedPostFilters = useAppSelector((state) => state.filtersSlice.posts);
+  // const {} = selectedPostFilters.queryParams;
   const { activeCheckboxes } = useAppSelector((state) => state.checkboxesSlice);
   const {
     isLoadings: { fetchPostsLoading },
@@ -38,7 +39,7 @@ const Posts = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [filteredPost]);
+  }, [selectedPostFilters.queryParams, selectedPostFilters.status]);
 
   useEffect(() => {
     dispatch(makeFiltersPosts(selectedPostFilters));
