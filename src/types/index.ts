@@ -4,6 +4,7 @@ export type PostType = {
   title: string;
   body: string;
   isFavorite?: boolean;
+  isNew?: boolean;
 };
 
 type ErrorType = null | string;
@@ -15,10 +16,12 @@ export type PostsStateType = {
   errors: {
     fetchPostsErr: ErrorType;
     changePostErr: ErrorType;
+    addPost: ErrorType;
   },
   isLoadings: {
     fetchPostsLoading: boolean;
     changePostLoading: boolean;
+    addPostLoading: boolean;
   },
 };
 

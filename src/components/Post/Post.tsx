@@ -79,7 +79,7 @@ const Post = ({ post }: { post: PostType }) => {
               <button onClick={() => handleRemove()} className="card__button" type="button">
                 <AiOutlineDelete className="card__icon" />
               </button>
-              <button
+              {!post?.isNew && <button
                 onClick={() => handleClickComment()}
                 aria-controls="comments"
                 aria-expanded={isOpenCollapse}
@@ -92,7 +92,7 @@ const Post = ({ post }: { post: PostType }) => {
                 ) : (
                   <FaRegComment className="card__icon" />
                 )}
-              </button>
+              </button>}
               <button onClick={() => setIsChangePost(!isChangePost)} className="card__button" type="button">
                 <AiOutlineEdit className="card__icon" />
               </button>

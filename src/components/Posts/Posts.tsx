@@ -59,13 +59,26 @@ const Posts = () => {
   const pageNumbers = createPageNumbers(filteredPost.length, postsPerPage);
   const createPosts = () => currentPosts.map((post) => <Post post={post} key={post.id} />);
 
+  const handleNewPost = () => {
+    dispatch(setShowModal({ typeModal: 'addNewPost' }));
+  };
+
   return (
     <Container>
       {fetchPostsErr || errorUsers ? <span>{fetchPostsErr || errorUsers}</span> : null}
       {fetchPostsLoading || isLoadingUsers ? <Loader /> : null}
       <SelectPostPage />
       <FiltersPost />
-      <SortingPosts />
+      <div className="sort-container">
+        <Button
+          type="button"
+          className="form__button"
+          onClick={() => handleNewPost()}
+        >
+          Создать пост
+        </Button>
+        <SortingPosts />
+      </div>
       {currentPosts.length === 0 ? (
         <p className="text_center">По вашему запросу ничего не найдено</p>
       ) : (

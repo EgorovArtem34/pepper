@@ -4,8 +4,15 @@ import { createUrl, modifyPosts } from '../utils/utils';
 import { PostsStateType, PostType } from '../types';
 import { PostsFiltersStateType } from './filtersSlice';
 
+type BodyType = {
+  title: string;
+  body: string;
+  userId: number;
+  id?: number;
+};
+
 export const fetchPosts = createAsyncThunk(
-  'user/fetchPosts',
+  'posts/fetchPosts',
   async () => {
     const createdUrl = createUrl('posts');
     const { data }: { data: PostType[] } = await axios.get(createdUrl);
@@ -13,15 +20,23 @@ export const fetchPosts = createAsyncThunk(
   },
 );
 
-type BodyType = {
-  id: number;
-  title: string;
-  body: string;
-  userId: number;
-};
+export const addPost = createAsyncThunk(
+  'posts/addPost',
+  async (body: BodyType) => {
+    const createdUrl = createUrl('posts');
+    const { data }: { data: PostType } = await axios.post(createdUrl, {
+      ...body,
+    }, {
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    });
+    return data;
+  },
+);
 
 export const changePost = createAsyncThunk(
-  'user/changePost',
+  'posts/changePost',
   async (body: BodyType) => {
     const createdUrl = createUrl('posts', body.id);
     const { data }: { data: PostType } = await axios.put(createdUrl, {
@@ -42,10 +57,12 @@ const initialState: PostsStateType = {
   errors: {
     fetchPostsErr: null,
     changePostErr: null,
+    addPost: null,
   },
   isLoadings: {
     fetchPostsLoading: false,
     changePostLoading: false,
+    addPostLoading: false,
   },
 };
 
@@ -99,28 +116,12 @@ const postsSlice = createSlice({
           }
         });
       }
-
       state.filteredPost = filteredPosts;
     },
     setFavoritePost: (state, { payload }: PayloadAction<number>) => {
       const currentPost = state.posts.find((post) => post.id === payload);
       if (currentPost) {
         currentPost.isFavorite = !(currentPost.isFavorite);
-      }
-    },
-    filterPostsByTitle: (state, { payload }: PayloadAction<string>) => {
-      state.filteredPost = state.filteredPost.length > 0
-        ? state.filteredPost.filter((post) => post.title.includes(payload))
-        : state.posts.filter((post) => post.title.includes(payload));
-    },
-    setFilteredPostByUsers: (state, { payload }: PayloadAction<number[]>) => {
-      state.filteredPost = state.posts.filter((post) => payload.includes(post.userId));
-    },
-    filteredPostByFavorite: (state, { payload }: PayloadAction<boolean>) => {
-      if (payload) {
-        state.filteredPost = state.filteredPost.filter((post) => post.isFavorite);
-      } else {
-        state.filteredPost = state.posts.filter((post) => post.isFavorite);
       }
     },
   },
@@ -158,6 +159,20 @@ const postsSlice = createSlice({
         }
         state.errors.changePostErr = null;
         state.isLoadings.changePostLoading = false;
+      })
+
+      .addCase(addPost.pending, (state) => {
+        state.errors.addPost = null;
+        state.isLoadings.addPostLoading = true;
+      })
+      .addCase(addPost.rejected, (state, { payload }: PayloadAction<any>) => {
+        state.errors.addPost = payload;
+        state.isLoadings.addPostLoading = false;
+      })
+      .addCase(addPost.fulfilled, (state, { payload }) => {
+        state.posts = [...state.posts, { ...payload, isNew: true }];
+        state.errors.addPost = null;
+        state.isLoadings.addPostLoading = false;
       });
   },
 });
@@ -166,9 +181,6 @@ export const {
   removePost,
   setFavoritePost,
   setPostsPerPage,
-  filterPostsByTitle,
-  setFilteredPostByUsers,
-  filteredPostByFavorite,
   makeFiltersPosts,
 } = postsSlice.actions;
 export default postsSlice.reducer;

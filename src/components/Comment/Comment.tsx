@@ -11,7 +11,7 @@ const Comment = ({ comment, isLoading, error }: CommentProps) => {
   if (Object.keys(comment).length === 0) {
     <span>Комментариев нет</span>;
   }
-
+  
   return (
     <div className="card mb-3">
       <div className="card-body">
