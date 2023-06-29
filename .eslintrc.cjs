@@ -32,6 +32,7 @@ module.exports = {
         'functional/no-try-statement': 0,
         'functional/no-throw-statement': 0,
         '@typescript-eslint/default-param-last': 'off',
+        'react/jsx-props-no-spreading': 0,
         'no-underscore-dangle': [2, { "allow": ["__filename", "__dirname", "__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"] }],
         'react/function-component-definition': [2, { "namedComponents": "arrow-function" }],
     },

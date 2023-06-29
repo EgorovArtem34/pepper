@@ -1,0 +1,30 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+textarea,
+.form__input {
+  margin-top: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 4px;
+  outline: none;
+  padding: 10px;
+
+  &:focus,
+  &:active {
+    border: 1px solid rgb(59, 9, 134);
+  }
+}
+
+.form__input-error {
+  border: 1px solid red;
+}
+
+.form__error-text {
+  position: relative;
+  font-size: 12px;
+  color: rgb(138, 25, 25);
+  margin-top: 8px;
+}

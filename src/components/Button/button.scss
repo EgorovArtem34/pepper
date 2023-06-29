@@ -1,0 +1,33 @@
+.form__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  height: 44px;
+  padding: 10px 12px;
+  border-radius: 4px;
+}
+
+.button__submit {
+  background: #5558FA;
+  color: #FFFFFF;
+
+  &:hover {
+    background-color: #7275e6;
+    background-image: linear-gradient(315deg, #4b60d7 0%, #5345e8 74%);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.button__back {
+  border: 1.5px solid #5558FA;
+  background: #FFFFFF;
+
+  &:hover {
+    background-color: aliceblue;
+  }
+}

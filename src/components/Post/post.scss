@@ -1,0 +1,43 @@
+#comments {
+  margin-top: 5px;
+}
+
+.card {
+
+  &:first-of-type {
+    margin-top: 20px;
+  }
+}
+
+.card_favorite {
+  border: 3px solid rgb(164, 234, 164);
+  border-radius: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.card__interface {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.card__button {
+  display: flex;
+  align-items: center;
+  border: none;
+  background-color: transparent;
+  transition: transform 0.3s ease;
+
+  &:not(:last-child) {
+    margin-right: 5px;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.card__icon {
+  width: 20px;
+  height: 20px;
+}

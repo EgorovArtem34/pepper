@@ -1,0 +1,26 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form__label {
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.form__input,
+.form__textarea {
+  width: 100%;
+  padding: 5px;
+}
+
+.form__textarea {
+  min-height: 120px;
+}
+
+.form__button-wrap {
+  display: flex;
+  justify-content: space-between;
+}

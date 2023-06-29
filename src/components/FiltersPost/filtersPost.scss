@@ -1,0 +1,17 @@
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+
+  > *:not(:last-child) {
+    margin-right: 15px;
+  }
+
+  > *:first-child {
+    flex-basis: 20%;
+  }
+  > *:not(:first-child) {
+    flex-basis: 40%;
+  }
+}

@@ -1,0 +1,50 @@
+.filters__form {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.filters__input-img {
+  position: absolute;
+  left: 0;
+  width: 22px;
+  margin-left: 5px;
+  height: 22px;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  color: hsl(0, 23%, 91%);
+}
+
+.filters__input {
+  padding: 10px 25px;
+  width: 100%;
+  min-height: 38px;
+  border: none;
+  border-radius: 15px;
+  outline: none;
+  background-color: hsla(0, 4%, 82%, 0.197);
+  color: black;
+
+  &:focus {
+    border: 1px solid #2684ff;
+    border-width: 1px;
+  }
+
+  &:focus + .filters__input-img,
+  &:hover + .filters__input-img {
+    color: black;
+  }
+}
+
+.filters__clear-button {
+  position: absolute;
+  margin: 0 auto;
+  right: 0;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  color: hsl(0, 23%, 91%);
+}

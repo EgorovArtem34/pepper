@@ -1,0 +1,14 @@
+.sortingPosts {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 15px;
+}
+
+.sortingPosts__btn {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: hsla(0, 4%, 82%, 0.197);
+  color: black;
+}

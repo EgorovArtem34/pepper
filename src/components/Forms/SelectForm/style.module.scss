@@ -1,0 +1,33 @@
+.select {
+  margin-left: 5px;
+  appearance: none;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  padding: 0 4em 0 1em;
+  border-radius: 0.25em;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::-ms-expand {
+    display: none;
+  }
+}
+
+.select_postPage {
+  width: 7em;
+  height: 2em;
+  background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg) no-repeat right 0.8em center / 1.4em,
+  linear-gradient(to left, rgba(20, 19, 19, 0.3) 3em, rgba(23, 18, 18, 0.218) 3em);
+  color: black;
+}
+
+.select__option {
+  color: inherit;
+  background-color: rgba(23, 18, 18, 0.218);
+}
+
