@@ -11,30 +11,30 @@ export const createPageNumbers = (posts: number, postsPerPage: number) => {
   return pageNumbers;
 };
 
-export const setFavoriteLocalStorage = (id: number, newFavoriteValue: boolean) => {
-  const favoritesLocalStorage = JSON.parse(localStorage.getItem('favoritesPosts') ?? '[]');
+export const setFavoriteLocalStorage = (id: number, newFavoriteValue: boolean, type: string) => {
+  const favoritesLocalStorage = JSON.parse(localStorage.getItem(type) ?? '[]');
   const updatedFavorites = newFavoriteValue
     ? [...favoritesLocalStorage, id]
     : favoritesLocalStorage.filter((favoriteId: number) => favoriteId !== id);
 
   if (updatedFavorites.length === 0) {
-    localStorage.removeItem('favoritesPosts');
+    localStorage.removeItem(type);
   } else {
-    localStorage.setItem('favoritesPosts', JSON.stringify(updatedFavorites));
+    localStorage.setItem(type, JSON.stringify(updatedFavorites));
   }
 };
 
-export const filterFavoritesLocalStorage = (ids: number[]) => {
-  const favorites: number[] = JSON.parse(localStorage.getItem('favoritesPosts') ?? JSON.stringify([]));
+export const filterFavoritesLocalStorage = (ids: number[], type: string) => {
+  const favorites: number[] = JSON.parse(localStorage.getItem(type) ?? JSON.stringify([]));
   if (favorites.length === 0) {
     return null;
   }
   const filteredFavorites = favorites.filter((favorite) => !(ids.includes(favorite)));
 
   if (filteredFavorites.length === 0) {
-    localStorage.removeItem('favoritesPosts');
+    localStorage.removeItem(type);
   } else {
-    localStorage.setItem('favoritesPosts', JSON.stringify(filteredFavorites));
+    localStorage.setItem(type, JSON.stringify(filteredFavorites));
   }
   return null;
 };
@@ -47,6 +47,29 @@ export const modifyPosts = (posts: PostType[]) => {
   }));
 };
 
-export const setPostPerPageLocalStorage = (postsPerPage: number) => {
-  localStorage.setItem('postPerPage', JSON.stringify(postsPerPage));
+export const setValuesPerPageLocalStorage = (valuesPerPage: number, type: string) => {
+  switch (type) {
+    case 'posts':
+      localStorage.setItem('postsPerPage', JSON.stringify(valuesPerPage));
+      break;
+    case 'albums':
+      localStorage.setItem('albumsPerPage', JSON.stringify(valuesPerPage));
+      break;
+    default: break;
+  }
+};
+
+export const defineTextModal = (typeModal: string) => {
+  let textModal = '';
+  switch (typeModal) {
+    case 'deletePost':
+      textModal = 'пост';
+      break;
+    case 'deleteAlbum':
+      textModal = 'альбом';
+      break;
+    default:
+      break;
+  }
+  return textModal;
 };

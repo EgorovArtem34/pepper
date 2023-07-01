@@ -2,32 +2,32 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { setCloseModal } from '../../../store/modalsSlice';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
-import { clearCheckboxesPosts } from '../../../store/checkboxesSlice';
-import { setFavoritePost } from '../../../store/postsSlice';
+import { clearCheckboxesAlbums } from '../../../store/checkboxesSlice';
 import { setFavoriteLocalStorage } from '../../../utils/utils';
+import { setFavoriteAlbum } from '../../../store/albumsSlice';
 
-const SetLikePosts = () => {
+const SetLikeAlbums = () => {
   const dispatch = useAppDispatch();
-  const { activeCheckboxesPosts } = useAppSelector((state) => state.checkboxesSlice);
+  const { activeCheckboxesAlbums } = useAppSelector((state) => state.checkboxesSlice);
   const handleClose = () => dispatch(setCloseModal());
   const handleLike = () => {
-    activeCheckboxesPosts.forEach((id: number) => {
-      const favorites: number[] = JSON.parse(localStorage.getItem('favoritesPosts') ?? JSON.stringify([]));
+    activeCheckboxesAlbums.forEach((id: number) => {
+      const favorites: number[] = JSON.parse(localStorage.getItem('favoritesAlbums') ?? JSON.stringify([]));
       if (!(favorites.includes(id))) {
-        dispatch(setFavoritePost(id));
-        setFavoriteLocalStorage(id, true, 'favoritesPosts');
+        dispatch(setFavoriteAlbum(id));
+        setFavoriteLocalStorage(id, true, 'favoritesAlbums');
       }
     });
-    dispatch(clearCheckboxesPosts());
+    dispatch(clearCheckboxesAlbums());
     dispatch(setCloseModal());
   };
 
   return (
     <Modal show onHide={handleClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить посты в избранное</Modal.Title>
+        <Modal.Title>Добавить альбомы в избранное</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Вы действительно хотите добавить в избранное выделенные посты?</Modal.Body>
+      <Modal.Body>Вы действительно хотите добавить в избранное выделенные альбомы?</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Отменить
@@ -40,4 +40,4 @@ const SetLikePosts = () => {
   );
 };
 
-export default SetLikePosts;
+export default SetLikeAlbums;

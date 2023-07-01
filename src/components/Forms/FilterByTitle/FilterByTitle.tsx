@@ -4,9 +4,11 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import '../filters.scss';
 import { makeFiltersPosts } from '../../../store/postsSlice';
-import { setFilterByTitle, unsetFilterBy } from '../../../store/filtersSlice';
+import { InitialFiltersStateType, setFilterByTitle, unsetFilterBy } from '../../../store/filtersSlice';
 
-const FilterByTitle = ({ filterBy }: { filterBy: string }) => {
+type FilterByTitleType = { filterBy: string, filterTarget: keyof InitialFiltersStateType };
+
+const FilterByTitle = ({ filterBy, filterTarget }: FilterByTitleType) => {
   const dispatch = useAppDispatch();
   const [inputValue, setInputValue] = useState('');
   const selectedPostFilters = useAppSelector((state) => state.filtersSlice.posts);
@@ -16,16 +18,16 @@ const FilterByTitle = ({ filterBy }: { filterBy: string }) => {
 
   const handleSearch = (value: string) => {
     if (!value) {
-      dispatch(unsetFilterBy('isFilterByTitleActive'));
+      dispatch(unsetFilterBy({ target: filterTarget, filter: 'isFilterByTitleActive' }));
       return;
     }
-    dispatch(setFilterByTitle(value));
+    dispatch(setFilterByTitle({ target: filterTarget, value }));
     dispatch(makeFiltersPosts(selectedPostFilters));
   };
 
   const handleClear = () => {
     setInputValue('');
-    dispatch(unsetFilterBy('isFilterByTitleActive'));
+    dispatch(unsetFilterBy({ target: filterTarget, filter: 'isFilterByTitleActive' }));
     setShowClearButton(false);
   };
 

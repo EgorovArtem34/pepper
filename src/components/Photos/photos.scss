@@ -1,0 +1,12 @@
+.photo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-gap: 1rem;
+}
+
+@media screen and (min-width: 1200px) {
+
+  .photo {
+    grid-template-columns: repeat(6, minmax(150px, 1fr));
+  }
+}

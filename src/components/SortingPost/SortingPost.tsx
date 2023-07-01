@@ -1,5 +1,8 @@
-import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { useAppDispatch } from '../../hooks/hooks';
 import {
+  AlbumsFiltersSortStateType,
+  InitialFiltersStateType,
+  PostsFiltersStateType,
   SortOrderType,
   SortType,
   setSortBy,
@@ -7,9 +10,14 @@ import {
 } from '../../store/filtersSlice';
 import './sortingPosts.scss';
 
-const SortingPosts = () => {
+interface SortingPostProps {
+  sortTarget: keyof InitialFiltersStateType,
+  selectedSort: AlbumsFiltersSortStateType | PostsFiltersStateType
+}
+
+const SortingPosts = ({ sortTarget, selectedSort }: SortingPostProps) => {
   const dispatch = useAppDispatch();
-  const { status, queryParams } = useAppSelector((state) => state.filtersSlice.posts);
+  const { status, queryParams } = selectedSort;
   const { sortBy } = status;
   const { sortOrder } = queryParams;
 
@@ -19,37 +27,40 @@ const SortingPosts = () => {
     if (sortBy === newSortBy) {
       newSortOrder = sortOrder === 'ascend' ? 'descend' : 'ascend';
     }
-    dispatch(setSortBy({ sortBy: newSortBy, sortOrder: newSortOrder }));
+    dispatch(setSortBy({ target: sortTarget, sortBy: newSortBy, sortOrder: newSortOrder }));
   };
 
   const handleResetSort = () => {
-    dispatch(unsetSort());
+    dispatch(unsetSort(sortTarget));
   };
 
   return (
     <div className="sortingPosts">
-      <button onClick={() => handleSort('id')} className="sortingPosts__btn" type="button">
-        Sort by ID
-        {' '}
-        {sortBy === 'id' && (sortOrder === 'ascend' ? '▲' : '▼')}
-      </button>
-      <button onClick={() => handleSort('title')} className="sortingPosts__btn" type="button">
-        Sort by Title
-        {' '}
-        {sortBy === 'title' && (sortOrder === 'ascend' ? '▲' : '▼')}
-      </button>
-      <button onClick={() => handleSort('userId')} className="sortingPosts__btn" type="button">
-        Sort by User ID
-        {' '}
-        {sortBy === 'userId' && (sortOrder === 'ascend' ? '▲' : '▼')}
-      </button>
-      {sortBy && (
-        <button onClick={handleResetSort} className="sortingPosts__btn" type="button">
-          Сбросить сортировку
+      <div className="sortingPosts__btnContainer">
+        <span className="sortingPosts__desc">Сортировать по</span>
+        <button onClick={() => handleSort('id')} className="sortingPosts__btn" type="button">
+          Id
           {' '}
-          <span className="reset-icon">&#8634;</span>
+          {sortBy === 'id' && (sortOrder === 'ascend' ? '▲' : '▼')}
         </button>
-      )}
+        <button onClick={() => handleSort('title')} className="sortingPosts__btn" type="button">
+          Названию
+          {' '}
+          {sortBy === 'title' && (sortOrder === 'ascend' ? '▲' : '▼')}
+        </button>
+        <button onClick={() => handleSort('userId')} className="sortingPosts__btn" type="button">
+          Автору
+          {' '}
+          {sortBy === 'userId' && (sortOrder === 'ascend' ? '▲' : '▼')}
+        </button>
+        {sortBy && (
+          <button onClick={handleResetSort} className="sortingPosts__btn" type="button">
+            Сбросить сортировку
+            {' '}
+            <span className="reset-icon">&#8634;</span>
+          </button>
+        )}
+      </div>
     </div>
   );
 };

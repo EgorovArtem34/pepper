@@ -7,7 +7,7 @@ export type PostType = {
   isNew?: boolean;
 };
 
-type ErrorType = null | string;
+export type ErrorType = null | string;
 
 export type PostsStateType = {
   posts: PostType[],

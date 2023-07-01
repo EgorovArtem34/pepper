@@ -5,6 +5,8 @@ import usersSlice from './usersSlice';
 import modalsSlice from './modalsSlice';
 import checkboxesSlice from './checkboxesSlice';
 import filtersSlice from './filtersSlice';
+import albumsSlice from './albumsSlice';
+import photosSlice from './photosSlice';
 
 const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ const store = configureStore({
     modalsSlice,
     checkboxesSlice,
     filtersSlice,
+    albumsSlice,
+    photosSlice,
   },
 });
 

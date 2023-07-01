@@ -27,22 +27,19 @@ const usersSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUsers.pending, (state: UsersState) => {
+      .addCase(fetchUsers.pending, (state) => {
         state.error = null;
         state.isLoading = true;
       })
-      .addCase(fetchUsers.rejected, (state: UsersState, { payload }: PayloadAction<any>) => {
+      .addCase(fetchUsers.rejected, (state, { payload }: PayloadAction<any>) => {
         state.error = payload;
         state.isLoading = false;
       })
-      .addCase(
-        fetchUsers.fulfilled,
-        (state: UsersState, { payload }: PayloadAction<UserType[]>) => {
-          state.error = null;
-          state.users = payload;
-          state.isLoading = false;
-        },
-      );
+      .addCase(fetchUsers.fulfilled, (state, { payload }: PayloadAction<UserType[]>) => {
+        state.error = null;
+        state.users = payload;
+        state.isLoading = false;
+      });
   },
 });
 

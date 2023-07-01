@@ -1,29 +1,47 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type InitialStateType = {
-  activeCheckboxes: number[],
+  activeCheckboxesPosts: number[],
+  activeCheckboxesAlbums: number[],
 };
 const initialState: InitialStateType = {
-  activeCheckboxes: [],
+  activeCheckboxesPosts: [],
+  activeCheckboxesAlbums: [],
 };
 
 const checkboxesSlice = createSlice({
   name: 'checkboxes',
   initialState,
   reducers: {
-    addCheckbox: (state, { payload }: PayloadAction<number>) => {
-      state.activeCheckboxes = [...state.activeCheckboxes, payload];
+    addCheckboxPosts: (state, { payload }: PayloadAction<number>) => {
+      state.activeCheckboxesPosts = [...state.activeCheckboxesPosts, payload];
     },
-    removeCheckbox: (state, { payload }: PayloadAction<number>) => {
-      state.activeCheckboxes = state.activeCheckboxes.filter((checkbox) => checkbox !== payload);
+    addCheckboxAlbums: (state, { payload }: PayloadAction<number>) => {
+      state.activeCheckboxesAlbums = [...state.activeCheckboxesAlbums, payload];
     },
-    clearCheckboxesState: () => initialState,
+    removeCheckboxPosts: (state, { payload }: PayloadAction<number>) => {
+      state.activeCheckboxesPosts = state.activeCheckboxesPosts
+        .filter((checkbox) => checkbox !== payload);
+    },
+    removeCheckboxAlbums: (state, { payload }: PayloadAction<number>) => {
+      state.activeCheckboxesAlbums = state
+        .activeCheckboxesAlbums.filter((checkbox) => checkbox !== payload);
+    },
+    clearCheckboxesPosts: (state) => {
+      state.activeCheckboxesPosts = [];
+    },
+    clearCheckboxesAlbums: (state) => {
+      state.activeCheckboxesAlbums = [];
+    },
   },
 });
 
 export const {
-  addCheckbox,
-  removeCheckbox,
-  clearCheckboxesState,
+  addCheckboxPosts,
+  addCheckboxAlbums,
+  removeCheckboxPosts,
+  removeCheckboxAlbums,
+  clearCheckboxesPosts,
+  clearCheckboxesAlbums,
 } = checkboxesSlice.actions;
 export default checkboxesSlice.reducer;

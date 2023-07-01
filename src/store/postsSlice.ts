@@ -76,6 +76,9 @@ const postsSlice = createSlice({
     removePost: (state, { payload }: PayloadAction<number>) => {
       state.posts = state.posts.filter((post) => post.id !== payload);
     },
+    removePosts: (state, { payload }: PayloadAction<number[]>) => {
+      state.posts = state.posts.filter((post) => !payload.includes(post.id));
+    },
     makeFiltersPosts: (state, { payload }: PayloadAction<PostsFiltersStateType>) => {
       const { queryParams, status } = payload;
       let filteredPosts = state.posts;
@@ -179,6 +182,7 @@ const postsSlice = createSlice({
 
 export const {
   removePost,
+  removePosts,
   setFavoritePost,
   setPostsPerPage,
   makeFiltersPosts,

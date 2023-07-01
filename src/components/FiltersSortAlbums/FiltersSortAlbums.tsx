@@ -1,17 +1,17 @@
 import { useState, ChangeEvent } from 'react';
 import FilterByTitle from '../Forms/FilterByTitle/FilterByTitle';
-import './filtersPost.scss';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import SelectMultipleForm from '../Forms/SelectMultipleForm/SelectMultipleForm';
 import Checkbox from '../Checkbox/Checkbox';
 import { setFilterByFavorite, setFilterByUsers, unsetFilterBy } from '../../store/filtersSlice';
+import './filtersSortAlbums.scss';
 
 interface Option {
   readonly label: string;
   readonly value: string;
 }
 
-const FiltersPost = () => {
+const FiltersSortAlbums = () => {
   const dispatch = useAppDispatch();
   const [isChecked, setIsChecked] = useState(false);
   const { users } = useAppSelector((state) => state.usersSlice);
@@ -22,19 +22,19 @@ const FiltersPost = () => {
 
   const handleSelectChange = (selectedUsers: Option[]) => {
     if (selectedUsers.length === 0) {
-      dispatch(unsetFilterBy({ target: 'posts', filter: 'isFilterByByUsersActive' }));
+      dispatch(unsetFilterBy({ target: 'albums', filter: 'isFilterByByUsersActive' }));
       return null;
     }
     const modifySelectedUsers: number[] = selectedUsers.flatMap((user) => +user.value);
-    dispatch(setFilterByUsers({ target: 'posts', value: modifySelectedUsers }));
+    dispatch(setFilterByUsers({ target: 'albums', value: modifySelectedUsers }));
     return null;
   };
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.checked;
     if (newValue) {
-      dispatch(setFilterByFavorite('posts'));
+      dispatch(setFilterByFavorite('albums'));
     } else {
-      dispatch(unsetFilterBy({ target: 'posts', filter: 'isFilterByFavoriteActive' }));
+      dispatch(unsetFilterBy({ target: 'albums', filter: 'isFilterByFavoriteActive' }));
     }
     setIsChecked((prev) => !prev);
   };
@@ -42,15 +42,15 @@ const FiltersPost = () => {
   return (
     <div className="filters">
       <Checkbox
-        name="favorites-posts"
-        id="favorites-posts"
+        name="favorites-albums"
+        id="favorites-albums"
         checked={isChecked}
         onChange={handleCheckboxChange}
         isLabel
       >
         Показать избранные посты
       </Checkbox>
-      <FilterByTitle filterBy="заголовку" filterTarget="posts" />
+      <FilterByTitle filterBy="заголовку" filterTarget="albums" />
       <SelectMultipleForm
         defaultValue=""
         options={optionsForMultipleSelect}
@@ -61,4 +61,4 @@ const FiltersPost = () => {
   );
 };
 
-export default FiltersPost;
+export default FiltersSortAlbums;

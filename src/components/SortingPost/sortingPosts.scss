@@ -1,8 +1,17 @@
 .sortingPosts {
   display: flex;
+  position: relative;
+  align-items: center;
   justify-content: center;
-  gap: 30px;
   margin: 0 auto 15px;
+}
+
+.sortingPosts__btnContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  position: relative;
 }
 
 .sortingPosts__btn {
@@ -11,4 +20,12 @@
   border-radius: 5px;
   background-color: hsla(0, 4%, 82%, 0.197);
   color: black;
+}
+
+.sortingPosts__desc {
+  position: absolute;
+  right: calc(100% + 15px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
 }

@@ -1,9 +1,6 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import cn from 'classnames';
 import { Collapse } from 'react-bootstrap';
-import { FaRegComment, FaCommentSlash } from 'react-icons/fa';
-import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
-import { MdOutlineFavoriteBorder, MdOutlineFavorite } from 'react-icons/md';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import {
   CommentsStateType, PostType, CommentType, UserType,
@@ -14,16 +11,16 @@ import ChangePost from '../ChangePost/ChangePost';
 import { setShowModal } from '../../store/modalsSlice';
 import { setFavoritePost } from '../../store/postsSlice';
 import { setFavoriteLocalStorage } from '../../utils/utils';
-import Checkbox from '../Checkbox/Checkbox';
-import { addCheckbox, removeCheckbox } from '../../store/checkboxesSlice';
+import { addCheckboxPosts, removeCheckboxPosts } from '../../store/checkboxesSlice';
+import InterfaceCard from '../InterfaceCard/InterfaceCard';
 import './post.scss';
 
 const Post = ({ post }: { post: PostType }) => {
   const dispatch = useAppDispatch();
-  const { comments, error, isLoading }: CommentsStateType = useAppSelector(
-    (state) => state.commentsSlice,
-  );
-  const { activeCheckboxes } = useAppSelector((state) => state.checkboxesSlice);
+  const {
+    comments, error, isLoading,
+  }: CommentsStateType = useAppSelector((state) => state.commentsSlice);
+  const { activeCheckboxesPosts } = useAppSelector((state) => state.checkboxesSlice);
   const { users } = useAppSelector((state) => state.usersSlice);
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   const currentComments = comments[post.id] || [];
@@ -31,12 +28,12 @@ const Post = ({ post }: { post: PostType }) => {
   const [isChangePost, setIsChangePost] = useState(false);
 
   useEffect(() => {
-    setCurrentUser(users.find((user) => user.id === post.userId) as UserType);
+    setCurrentUser(users.find((user: UserType) => user.id === post.userId) as UserType);
   }, [post, currentUser, users]);
 
   const handleFavorite = () => {
     dispatch(setFavoritePost(post.id));
-    setFavoriteLocalStorage(post.id, !post.isFavorite);
+    setFavoriteLocalStorage(post.id, !post.isFavorite, 'favoritesPosts');
   };
 
   const handleClickComment = () => {
@@ -49,6 +46,7 @@ const Post = ({ post }: { post: PostType }) => {
   const handleRemove = () => {
     dispatch(setShowModal({ typeModal: 'deletePost', id: post.id }));
   };
+
   const cardClass = () => cn('card', 'p-2', 'mb-4', {
     card_favorite: post.isFavorite,
   });
@@ -56,9 +54,9 @@ const Post = ({ post }: { post: PostType }) => {
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.checked;
     if (newValue) {
-      dispatch(addCheckbox(post.id));
+      dispatch(addCheckboxPosts(post.id));
     } else {
-      dispatch(removeCheckbox(post.id));
+      dispatch(removeCheckboxPosts(post.id));
     }
     return null;
   };
@@ -68,44 +66,17 @@ const Post = ({ post }: { post: PostType }) => {
       <div className="row">
         <div className="px-3">
           <div className="card-block px-6">
-            <div className="card__interface">
-              <Checkbox
-                name="checkbox-interface"
-                id="checkbox-interface"
-                checked={activeCheckboxes.includes(post.id)}
-                onChange={handleCheckboxChange}
-                isLabel={false}
-              />
-              <button onClick={() => handleRemove()} className="card__button" type="button">
-                <AiOutlineDelete className="card__icon" />
-              </button>
-              {!post?.isNew && (
-              <button
-                onClick={() => handleClickComment()}
-                aria-controls="comments"
-                aria-expanded={isOpenCollapse}
-                className="card__button"
-                disabled={isChangePost}
-                type="button"
-              >
-                {isOpenCollapse ? (
-                  <FaCommentSlash className="card__icon" />
-                ) : (
-                  <FaRegComment className="card__icon" />
-                )}
-              </button>
-              )}
-              <button onClick={() => setIsChangePost(!isChangePost)} className="card__button" type="button">
-                <AiOutlineEdit className="card__icon" />
-              </button>
-              <button onClick={() => handleFavorite()} className="card__button" type="button">
-                {post.isFavorite ? (
-                  <MdOutlineFavorite className="card__icon" />
-                ) : (
-                  <MdOutlineFavoriteBorder className="card__icon" />
-                )}
-              </button>
-            </div>
+            <InterfaceCard
+              data={post}
+              activeCheckboxes={activeCheckboxesPosts}
+              handleCheckboxChange={handleCheckboxChange}
+              handleRemove={handleRemove}
+              handleClickComment={handleClickComment}
+              isOpenCollapse={isOpenCollapse}
+              handleFavorite={handleFavorite}
+              setIsChangeValue={setIsChangePost}
+              isChangeValue={isChangePost}
+            />
             {isChangePost ? (
               <ChangePost
                 currentUser={currentUser as UserType}

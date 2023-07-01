@@ -1,0 +1,21 @@
+.photo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background-color: rgba(234, 242, 245, 0.8);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.photo-card__image {
+  max-width: 150px;
+  max-height: 150px;
+  padding: 0 5px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.photo-card__body {
+  padding: 10px;
+}

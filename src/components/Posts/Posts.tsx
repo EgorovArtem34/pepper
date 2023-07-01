@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Pagination } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Loader from '../Loader/Loader';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { fetchPosts, makeFiltersPosts } from '../../store/postsSlice';
@@ -9,16 +9,17 @@ import { fetchUsers } from '../../store/usersSlice';
 import Button from '../Button/Button';
 import './posts.scss';
 import { setShowModal } from '../../store/modalsSlice';
-import SelectPostPage from '../SelectPostPage/SelectPostPage';
+import SelectPageCount from '../SelectPostPage/SelectPageCount';
 import FiltersPost from '../FiltersPost/FiltersPost';
 import { PostType } from '../../types';
 import SortingPosts from '../SortingPost/SortingPost';
+import Pagination from '../Pagination/Pagination';
+import ButtonsCheckbox from '../ButtonsCheckbox/ButtonsCheckbox';
 
 const Posts = () => {
   const dispatch = useAppDispatch();
   const selectedPostFilters = useAppSelector((state) => state.filtersSlice.posts);
-  // const {} = selectedPostFilters.queryParams;
-  const { activeCheckboxes } = useAppSelector((state) => state.checkboxesSlice);
+  const { activeCheckboxesPosts } = useAppSelector((state) => state.checkboxesSlice);
   const {
     isLoadings: { fetchPostsLoading },
     errors: { fetchPostsErr },
@@ -26,7 +27,7 @@ const Posts = () => {
     filteredPost,
     postsPerPage,
   } = useAppSelector((state) => state.postsSlice);
-  const { isLoading: isLoadingUsers, error: errorUsers } = useAppSelector(
+  const { isLoading: isLoadingUsers, error: errorUsers, users } = useAppSelector(
     (state) => state.usersSlice,
   );
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,8 +35,10 @@ const Posts = () => {
 
   useEffect(() => {
     dispatch(fetchPosts());
-    dispatch(fetchUsers());
-  }, [dispatch]);
+    if (users.length === 0) {
+      dispatch(fetchUsers());
+    }
+  }, [dispatch, users.length]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -50,7 +53,11 @@ const Posts = () => {
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const postsOn1Page = filteredPost.slice(indexOfFirstPost, indexOfLastPost);
     setCurrentPosts(postsOn1Page);
-  }, [currentPage, filteredPost, posts, postsPerPage]);
+  }, [currentPage, filteredPost, postsPerPage]);
+
+  if (fetchPostsLoading || isLoadingUsers) {
+    return <Loader />;
+  }
 
   const handlePageChange = (pageNumber: number) => {
     if (currentPage !== pageNumber) {
@@ -67,52 +74,42 @@ const Posts = () => {
   return (
     <Container>
       {fetchPostsErr || errorUsers ? <span>{fetchPostsErr || errorUsers}</span> : null}
-      {fetchPostsLoading || isLoadingUsers ? <Loader /> : null}
-      <SelectPostPage />
+      <SelectPageCount
+        type="posts"
+        name="filter-postsPerPage"
+        values={posts}
+        valuesPerPage={postsPerPage}
+        place="select_postsPage"
+      />
       <FiltersPost />
       <div className="sort-container">
         <Button
           type="button"
-          className="form__button"
+          className="form__button form__button_sort-btn"
           onClick={() => handleNewPost()}
         >
           Создать пост
         </Button>
-        <SortingPosts />
+        <SortingPosts
+          sortTarget="posts"
+          selectedSort={selectedPostFilters}
+        />
       </div>
       {currentPosts.length === 0 ? (
         <p className="text_center">По вашему запросу ничего не найдено</p>
       ) : (
         createPosts()
       )}
-      <Pagination>
-        {pageNumbers.map((pageNumber) => (
-          <Pagination.Item
-            key={pageNumber}
-            active={pageNumber === currentPage}
-            onClick={() => handlePageChange(pageNumber)}
-          >
-            {pageNumber}
-          </Pagination.Item>
-        ))}
-      </Pagination>
-      {activeCheckboxes.length > 0 ? (
-        <div className="buttons_checkbox">
-          <Button
-            type="button"
-            className="form__button button__back"
-            onClick={() => dispatch(setShowModal({ typeModal: 'deletePosts' }))}
-          >
-            Удалить
-          </Button>
-          <Button
-            type="submit"
-            className="form__button button__submit"
-            onClick={() => dispatch(setShowModal({ typeModal: 'setFavoritePosts' }))}
-          >
-            В избранное
-          </Button>
-        </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={pageNumbers.length}
+        onPageChange={handlePageChange}
+      />
+      {activeCheckboxesPosts.length > 0 ? (
+        <ButtonsCheckbox
+          handleDelete={() => dispatch(setShowModal({ typeModal: 'deletePosts' }))}
+          handleFavorite={() => dispatch(setShowModal({ typeModal: 'setFavoritePosts' }))}
+        />
       ) : null}
     </Container>
   );

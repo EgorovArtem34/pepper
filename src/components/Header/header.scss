@@ -3,6 +3,19 @@
   height: 30px;
 }
 
+.link {
+  text-decoration: none;
+  cursor: pointer; 
+
+  &:not(:last-of-type) {
+    margin-right: 10px;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .link_active {
   color: blue;
   font-weight: bold;
