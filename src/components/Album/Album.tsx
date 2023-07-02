@@ -32,7 +32,7 @@ const Album = ({ album }: { album: AlbumType }) => {
     dispatch(setShowModal({ typeModal: 'deleteAlbum', id: album.id }));
   };
 
-  const cardClass = () => cn('card', 'p-2', 'mb-4', {
+  const cardClass = () => cn('card', {
     card_favorite: album.isFavorite,
   });
 
@@ -67,10 +67,10 @@ const Album = ({ album }: { album: AlbumType }) => {
                 setIsChangeAlbum={setIsChangeAlbum}
               />
             ) : (
-              <>
+              <div className="card__info">
                 <Link to={`${currentUser?.id}`} className="card__link">{album.title}</Link>
                 <p className="card-text">{currentUser?.username}</p>
-              </>
+              </div>
             )}
           </div>
         </div>

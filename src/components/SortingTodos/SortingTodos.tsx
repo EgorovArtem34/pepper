@@ -1,6 +1,6 @@
 import { BiTask, BiTaskX } from 'react-icons/bi';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { setSortBy, unsetSort } from '../../store/todosSlice';
+import { setSortBy } from '../../store/todosSlice';
 import './sortingTodos.scss';
 
 const SortingTodos = () => {

@@ -1,0 +1,13 @@
+.card__albums {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-gap: 1rem;
+  margin-bottom: 10px;
+}
+
+@media screen and (min-width: 1200px) {
+
+  .card__albums {
+    grid-template-columns: repeat(5, minmax(150px, 1fr));
+  }
+}

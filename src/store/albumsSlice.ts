@@ -24,10 +24,12 @@ export type AlbumsStateType = {
   errors: {
     fetchAlbumsErr: ErrorType;
     changeAlbumErr: ErrorType;
+    removeAlbumErr: ErrorType;
   },
   isLoadings: {
     fetchAlbumsLoading: boolean;
     changeAlbumLoading: boolean;
+    removeAlbumLoading: boolean;
   },
 };
 
@@ -36,6 +38,18 @@ export const fetchAlbums = createAsyncThunk<AlbumType[]>('albums/fetchAlbums', a
   const { data }: AxiosResponse<AlbumType[]> = await axios.get(createdUrl);
   return data;
 });
+
+export const removeAlbum = createAsyncThunk(
+  'albums/removeAlbum',
+  async (id: number) => {
+    const createdUrl = createUrl('albums', id);
+    const { status } = await axios.delete(createdUrl);
+    if (status === 200) {
+      return id;
+    }
+    return status;
+  },
+);
 
 export const changeAlbum = createAsyncThunk(
   'albums/changeAlbum',
@@ -59,10 +73,12 @@ const initialState: AlbumsStateType = {
   errors: {
     fetchAlbumsErr: null,
     changeAlbumErr: null,
+    removeAlbumErr: null,
   },
   isLoadings: {
     fetchAlbumsLoading: false,
     changeAlbumLoading: false,
+    removeAlbumLoading: false,
   },
 };
 
@@ -72,12 +88,6 @@ const albumsSlice = createSlice({
   reducers: {
     setAlbumsPerPage: (state, { payload }: PayloadAction<number>) => {
       state.albumsPerPage = payload;
-    },
-    removeAlbum: (state, { payload }: PayloadAction<number>) => {
-      state.albums = state.albums.filter((album) => album.id !== payload);
-    },
-    removeAlbums: (state, { payload }: PayloadAction<number[]>) => {
-      state.albums = state.albums.filter((album) => !(payload.includes(album.id)));
     },
     setFavoriteAlbum: (state, { payload }: PayloadAction<number>) => {
       const currentAlbum = state.albums.find((album) => album.id === payload);
@@ -134,8 +144,8 @@ const albumsSlice = createSlice({
         state.errors.fetchAlbumsErr = null;
         state.isLoadings.fetchAlbumsLoading = true;
       })
-      .addCase(fetchAlbums.rejected, (state, { payload }: PayloadAction<any>) => {
-        state.errors.fetchAlbumsErr = payload;
+      .addCase(fetchAlbums.rejected, (state) => {
+        state.errors.fetchAlbumsErr = 'fetchAlbumsErr';
         state.isLoadings.fetchAlbumsLoading = false;
       })
       .addCase(fetchAlbums.fulfilled, (state, { payload }: PayloadAction<AlbumType[]>) => {
@@ -144,12 +154,26 @@ const albumsSlice = createSlice({
         state.isLoadings.fetchAlbumsLoading = false;
       })
 
+      .addCase(removeAlbum.pending, (state) => {
+        state.errors.removeAlbumErr = null;
+        state.isLoadings.removeAlbumLoading = true;
+      })
+      .addCase(removeAlbum.rejected, (state, { payload }: PayloadAction<any>) => {
+        state.errors.removeAlbumErr = payload.message;
+        state.isLoadings.removeAlbumLoading = false;
+      })
+      .addCase(removeAlbum.fulfilled, (state, { payload }: PayloadAction<number>) => {
+        state.albums = state.albums.filter((album) => album.id !== payload);
+        state.errors.removeAlbumErr = null;
+        state.isLoadings.removeAlbumLoading = false;
+      })
+
       .addCase(changeAlbum.pending, (state) => {
         state.errors.changeAlbumErr = null;
         state.isLoadings.changeAlbumLoading = true;
       })
       .addCase(changeAlbum.rejected, (state, { payload }: PayloadAction<any>) => {
-        state.errors.changeAlbumErr = payload;
+        state.errors.changeAlbumErr = payload.message;
         state.isLoadings.changeAlbumLoading = false;
       })
       .addCase(changeAlbum.fulfilled, (state, { payload }: PayloadAction<AlbumType>) => {
@@ -165,8 +189,6 @@ const albumsSlice = createSlice({
 
 export const {
   setAlbumsPerPage,
-  removeAlbum,
-  removeAlbums,
   setFavoriteAlbum,
   filterAndSortAlbums,
 } = albumsSlice.actions;

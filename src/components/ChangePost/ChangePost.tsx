@@ -8,7 +8,7 @@ import Button from '../Button/Button';
 import './changePost.scss';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { changePost } from '../../store/postsSlice';
-import Loader from '../Loader/Loader';
+import ModalLoader from '../Modals/components/ModalLoader/ModalLoader';
 
 const ChangePost = ({ currentUser, post, setIsChangePost }:
 {
@@ -57,7 +57,7 @@ const ChangePost = ({ currentUser, post, setIsChangePost }:
   });
 
   if (changePostLoading) {
-    return <Loader />;
+    return <ModalLoader />;
   }
   return (
     <form className="form" onSubmit={formik.handleSubmit}>

@@ -3,6 +3,9 @@
   padding: 15px;
   list-style-type: none;
   align-items: center;
+  background-color: rgba(234, 242, 245, 0.8);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(194, 188, 188, 0.5); 
   margin-bottom: 10px;
 
@@ -13,8 +16,6 @@
 
 .todo_completed {
   border: 3px solid rgb(164, 234, 164);
-  border-radius: 20px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .todo__interface {
@@ -44,6 +45,7 @@ svg:hover .second-path {
 }
 
 @media screen and (max-width: 400px) {
+  
   .todo {
     padding: 5px;
   }

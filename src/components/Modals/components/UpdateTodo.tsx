@@ -1,7 +1,6 @@
 import Modal from 'react-bootstrap/Modal';
 import { setCloseModal } from '../../../store/modalsSlice';
 import { useAppDispatch } from '../../../hooks/hooks';
-import AddTodoForm from '../../Forms/addTodoForm/AddTodoForm';
 import UpdateTodoForm from '../../Forms/UpdateTodoForm/UpdateTodoForm';
 import CompletedTodoForm from '../../Forms/UpdateTodoForm/CompletedTodoForm';
 

@@ -1,8 +1,6 @@
 import { ClipLoader } from 'react-spinners';
 import './modals.scss';
 
-  <ClipLoader color="#000" size={54} />;
-
 const ModalLoader = () => (
   <div className="modal">
     <div className="modal__content">

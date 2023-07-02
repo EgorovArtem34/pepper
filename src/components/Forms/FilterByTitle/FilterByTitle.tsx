@@ -13,7 +13,10 @@ import {
 } from '../../../store/todosSlice';
 import { filterAndSortAlbums } from '../../../store/albumsSlice';
 
-type FilterByTitleType = { filterBy: string, filterTarget: keyof InitialFiltersStateType | keyof TodosArrayType };
+type FilterByTitleType = {
+  filterBy: string,
+  filterTarget: keyof InitialFiltersStateType | keyof TodosArrayType
+};
 
 const FilterByTitle = ({ filterBy, filterTarget }: FilterByTitleType) => {
   const dispatch = useAppDispatch();
@@ -55,7 +58,7 @@ const FilterByTitle = ({ filterBy, filterTarget }: FilterByTitleType) => {
 
   const handleClear = () => {
     setInputValue('');
-    if (filterTarget = 'todos') {
+    if (filterTarget === 'todos') {
       dispatch(unsetFilterTodosBy('isFilterByTitleActive'));
     } else {
       dispatch(unsetFilterBy({ target: filterTarget, filter: 'isFilterByTitleActive' }));

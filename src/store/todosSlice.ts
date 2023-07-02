@@ -2,7 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 import * as _ from 'lodash';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createUrl } from '../utils/utils';
-import { SortTodosType, StatusFiltersTodosType, TodosFilterSortStateType } from '../types';
+import {
+  ErrorType, SortTodosType, StatusFiltersTodosType, TodosFilterSortStateType,
+} from '../types';
 
 export type TodoType = {
   userId: number;
@@ -33,7 +35,7 @@ type TodoApiResponse = {
   };
   id: number;
 };
-type changeTodoType = {
+type ChangeTodoType = {
   completed: boolean | undefined;
   title?: string | undefined;
   userId?: number | undefined;
@@ -42,14 +44,16 @@ type changeTodoType = {
 export type TodoStateType = TodosArrayType & {
   filteredTodos: TodoType[];
   errors: {
-    fetchTodosErr: string | null;
-    changeTodoErr: string | null;
-    addTodoErr: string | null;
+    fetchTodosErr: ErrorType;
+    changeTodoErr: ErrorType;
+    addTodoErr: ErrorType;
+    removeTodoErr: ErrorType;
   };
   isLoadings: {
-    fetchTodosLoading: boolean,
-    changeTodoLoading: boolean,
-    addTodoLoading: boolean,
+    fetchTodosLoading: boolean;
+    changeTodoLoading: boolean;
+    addTodoLoading: boolean;
+    removeTodoLoading: boolean;
   };
   todosPerPage: number;
   currentTodo: TodoType | null;
@@ -61,6 +65,18 @@ export const fetchTodos = createAsyncThunk<TodoType[]>('todos/fetchTodos', async
   const { data }: AxiosResponse<TodoType[]> = await axios.get(createdUrl);
   return data;
 });
+
+export const removeTodo = createAsyncThunk(
+  'todos/removeTodo',
+  async (id: number) => {
+    const createdUrl = createUrl('todos', id);
+    const { status } = await axios.delete(createdUrl);
+    if (status === 200) {
+      return id;
+    }
+    return status;
+  },
+);
 
 export const addTodo = createAsyncThunk(
   'todos/addTodo',
@@ -77,7 +93,7 @@ export const addTodo = createAsyncThunk(
   },
 );
 
-export const changeTodo = createAsyncThunk<TodoType, changeTodoType>('todos/changeTodo', async (todo) => {
+export const changeTodo = createAsyncThunk<TodoType, ChangeTodoType>('todos/changeTodo', async (todo) => {
   const createdUrl: string = createUrl('todos', todo.id);
   const { data: { body } }: { data: { body: TodoType } } = await axios.patch(createdUrl, {
     body: todo,
@@ -86,7 +102,6 @@ export const changeTodo = createAsyncThunk<TodoType, changeTodoType>('todos/chan
       'Content-type': 'application/json; charset=UTF-8',
     },
   });
-  console.log('body', body);
   return body;
 });
 
@@ -97,11 +112,13 @@ const initialState: TodoStateType = {
     fetchTodosErr: null,
     changeTodoErr: null,
     addTodoErr: null,
+    removeTodoErr: null,
   },
   isLoadings: {
     fetchTodosLoading: false,
     changeTodoLoading: false,
     addTodoLoading: false,
+    removeTodoLoading: false,
   },
   todosPerPage: 10,
   currentTodo: null,
@@ -146,9 +163,9 @@ const todosSlice = createSlice({
       state.filtersAndSort.queryParams.sortOrder = payload;
       state.filtersAndSort.status.sortBy = true;
     },
-    unsetSort: (state) => {
-      state.filtersAndSort.queryParams.sortOrder = null;
-    },
+    // unsetSort: (state) => {
+    //   state.filtersAndSort.queryParams.sortOrder = null;
+    // },
     unsetFilterBy: (state, { payload }: PayloadAction<keyof StatusFiltersTodosType>) => {
       state.filtersAndSort.status[payload] = false;
       if (payload === 'isFilterByTitleActive') {
@@ -160,7 +177,8 @@ const todosSlice = createSlice({
 
       if (state.filtersAndSort.status.isFilterByTitleActive) {
         filteredTodos = filteredTodos
-          .filter((todo) => todo.title.includes(state.filtersAndSort.queryParams.queryParamsByTitle as string));
+          .filter((todo) => todo.title
+            .includes(state.filtersAndSort.queryParams.queryParamsByTitle as string));
       }
       if (state.filtersAndSort.status.isFilterByByCompleted) {
         filteredTodos = filteredTodos.filter((todo) => todo.completed);
@@ -194,8 +212,9 @@ const todosSlice = createSlice({
         state.errors.fetchTodosErr = null;
         state.isLoadings.fetchTodosLoading = true;
       })
-      .addCase(fetchTodos.rejected, (state, { payload }: PayloadAction<any>) => {
-        state.errors.fetchTodosErr = payload;
+      .addCase(fetchTodos.rejected, (state) => {
+        // state.errors.fetchTodosErr = payload.message;
+        state.errors.fetchTodosErr = 'fetchTodosErr';
         state.isLoadings.fetchTodosLoading = false;
       })
       .addCase(fetchTodos.fulfilled, (state, { payload }: PayloadAction<TodoType[]>) => {
@@ -209,7 +228,7 @@ const todosSlice = createSlice({
         state.isLoadings.addTodoLoading = true;
       })
       .addCase(addTodo.rejected, (state, { payload }: PayloadAction<any>) => {
-        state.errors.addTodoErr = payload;
+        state.errors.addTodoErr = payload.message;
         state.isLoadings.addTodoLoading = false;
       })
       .addCase(addTodo.fulfilled, (state, { payload }: PayloadAction<TodoApiResponse>) => {
@@ -222,12 +241,26 @@ const todosSlice = createSlice({
         state.isLoadings.addTodoLoading = false;
       })
 
+      .addCase(removeTodo.pending, (state) => {
+        state.isLoadings.removeTodoLoading = true;
+        state.errors.removeTodoErr = null;
+      })
+      .addCase(removeTodo.rejected, (state, { payload }: PayloadAction<any>) => {
+        state.errors.removeTodoErr = payload.message;
+        state.isLoadings.removeTodoLoading = false;
+      })
+      .addCase(removeTodo.fulfilled, (state, { payload }) => {
+        state.todos = state.todos.filter((todo) => todo.id !== payload);
+        state.errors.removeTodoErr = null;
+        state.isLoadings.removeTodoLoading = false;
+      })
+
       .addCase(changeTodo.pending, (state) => {
         state.isLoadings.changeTodoLoading = true;
         state.errors.changeTodoErr = null;
       })
       .addCase(changeTodo.rejected, (state, { payload }: PayloadAction<any>) => {
-        state.errors.changeTodoErr = payload;
+        state.errors.changeTodoErr = payload.message;
         state.isLoadings.changeTodoLoading = false;
       })
       .addCase(changeTodo.fulfilled, (state, { payload }: PayloadAction<TodoType>) => {
@@ -250,7 +283,6 @@ export const {
   setFilterByByWorking,
   setSortBy,
   unsetFilterBy,
-  unsetSort,
   makeFiltersAndSortTodos,
 } = todosSlice.actions;
 export default todosSlice.reducer;

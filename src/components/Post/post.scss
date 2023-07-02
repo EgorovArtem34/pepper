@@ -3,16 +3,16 @@
 }
 
 .card {
-
-  &:first-of-type {
-    margin-top: 20px;
-  }
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: rgba(234, 242, 245, 0.8);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .card_favorite {
   border: 3px solid rgb(164, 234, 164);
-  border-radius: 20px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .card__interface {

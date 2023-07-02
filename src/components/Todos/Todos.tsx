@@ -5,18 +5,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import Loader from '../Loader/Loader';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { setShowModal } from '../../store/modalsSlice';
-import { AlbumType, fetchAlbums, filterAndSortAlbums } from '../../store/albumsSlice';
 import { createPageNumbers } from '../../utils/utils';
 import SelectPageCount from '../SelectPostPage/SelectPageCount';
 import Pagination from '../Pagination/Pagination';
-import Album from '../Album/Album';
 import { fetchUsers } from '../../store/usersSlice';
 import ButtonsCheckbox from '../ButtonsCheckbox/ButtonsCheckbox';
-import FiltersSortAlbums from '../FiltersSortAlbums/FiltersSortAlbums';
-import SortingValues from '../SortingValues/SortingValues';
 import './todos.scss';
 import {
-  TodoType, fetchTodos, makeFiltersAndSortTodos, setCurrentTodo,
+  TodoType, fetchTodos, makeFiltersAndSortTodos,
 } from '../../store/todosSlice';
 import Todo from '../Todo/Todo';
 import FilterByTitle from '../Forms/FilterByTitle/FilterByTitle';
@@ -36,14 +32,11 @@ const Todos = () => {
     filteredTodos,
     errors: {
       fetchTodosErr,
-      changeTodoErr,
     },
     isLoadings: {
       fetchTodosLoading,
-      changeTodoLoading,
     },
     todosPerPage,
-    currentTodo,
     filtersAndSort: {
       status,
       queryParams,
@@ -54,11 +47,20 @@ const Todos = () => {
   const [currentTodos, setCurrentTodos] = useState<TodoType[]>([]);
 
   useEffect(() => {
-    dispatch(fetchTodos());
+    if (todos.length === 0) {
+      dispatch(fetchTodos());
+    }
     if (users.length === 0) {
       dispatch(fetchUsers());
     }
-  }, [dispatch, users.length]);
+
+    if (fetchTodosErr) {
+      toast.error('Ошибка при получение списка задач');
+    }
+    if (errorUsers) {
+      toast.error('Ошибка при получение списка юзеров');
+    }
+  }, [dispatch, users.length, errorUsers, fetchTodosErr, todos.length]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -83,12 +85,6 @@ const Todos = () => {
 
   if (fetchTodosLoading || isLoadingUsers) {
     return <Loader />;
-  }
-  if (fetchTodosErr) {
-    toast.error(`Error fetching posts: ${fetchTodosErr}`);
-  }
-  if (errorUsers) {
-    toast.error(`Error fetching users: ${errorUsers}`);
   }
   const handlePageChange = (pageNumber: number) => {
     if (currentPage !== pageNumber) {

@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { setCloseModal } from '../../../store/modalsSlice';
@@ -10,12 +12,13 @@ const SetLikeAlbums = () => {
   const dispatch = useAppDispatch();
   const { activeCheckboxesAlbums } = useAppSelector((state) => state.checkboxesSlice);
   const handleClose = () => dispatch(setCloseModal());
-  const handleLike = () => {
+  const handleLike = async () => {
     activeCheckboxesAlbums.forEach((id: number) => {
       const favorites: number[] = JSON.parse(localStorage.getItem('favoritesAlbums') ?? JSON.stringify([]));
       if (!(favorites.includes(id))) {
         dispatch(setFavoriteAlbum(id));
         setFavoriteLocalStorage(id, true, 'favoritesAlbums');
+        toast.success('Успешное добавление в избранное');
       }
     });
     dispatch(clearCheckboxesAlbums());

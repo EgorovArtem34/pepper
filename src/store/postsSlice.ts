@@ -15,8 +15,28 @@ export const fetchPosts = createAsyncThunk(
   'posts/fetchPosts',
   async () => {
     const createdUrl = createUrl('posts');
-    const { data }: { data: PostType[] } = await axios.get(createdUrl);
-    return data;
+    try {
+      const { data }: { data: PostType[] } = await axios.get(createdUrl);
+      return data;
+    } catch (err: any) {
+      throw err.message;
+    }
+  },
+);
+
+export const removePost = createAsyncThunk(
+  'posts/removePost',
+  async (id: number) => {
+    const createdUrl = createUrl('posts', id);
+    try {
+      const { status } = await axios.delete(createdUrl);
+      if (status === 200) {
+        return id;
+      }
+      throw new Error();
+    } catch (err: any) {
+      throw err.message;
+    }
   },
 );
 
@@ -57,12 +77,14 @@ const initialState: PostsStateType = {
   errors: {
     fetchPostsErr: null,
     changePostErr: null,
+    removePostErr: null,
     addPostErr: null,
   },
   isLoadings: {
     fetchPostsLoading: false,
     changePostLoading: false,
     addPostLoading: false,
+    removePostLoading: false,
   },
 };
 
@@ -72,12 +94,6 @@ const postsSlice = createSlice({
   reducers: {
     setPostsPerPage: (state, { payload }: PayloadAction<number>) => {
       state.postsPerPage = payload;
-    },
-    removePost: (state, { payload }: PayloadAction<number>) => {
-      state.posts = state.posts.filter((post) => post.id !== payload);
-    },
-    removePosts: (state, { payload }: PayloadAction<number[]>) => {
-      state.posts = state.posts.filter((post) => !payload.includes(post.id));
     },
     makeFiltersPosts: (state, { payload }: PayloadAction<PostsFiltersStateType>) => {
       const { queryParams, status } = payload;
@@ -134,8 +150,9 @@ const postsSlice = createSlice({
         state.errors.fetchPostsErr = null;
         state.isLoadings.fetchPostsLoading = true;
       })
-      .addCase(fetchPosts.rejected, (state, { payload }: PayloadAction<any>) => {
-        state.errors.fetchPostsErr = payload;
+      .addCase(fetchPosts.rejected, (state) => {
+        // state.errors.fetchPostsErr = payload.message;
+        state.errors.fetchPostsErr = 'fetchPostsErr';
         state.isLoadings.fetchPostsLoading = false;
       })
       .addCase(fetchPosts.fulfilled, (state, { payload }) => {
@@ -169,20 +186,32 @@ const postsSlice = createSlice({
         state.isLoadings.addPostLoading = true;
       })
       .addCase(addPost.rejected, (state, { payload }: PayloadAction<any>) => {
-        state.errors.addPostErr = payload;
+        state.errors.addPostErr = payload.message;
         state.isLoadings.addPostLoading = false;
       })
       .addCase(addPost.fulfilled, (state, { payload }) => {
         state.posts = [...state.posts, { ...payload, isNew: true }];
         state.errors.addPostErr = null;
         state.isLoadings.addPostLoading = false;
+      })
+
+      .addCase(removePost.pending, (state) => {
+        state.errors.removePostErr = null;
+        state.isLoadings.removePostLoading = true;
+      })
+      .addCase(removePost.rejected, (state, { payload }: PayloadAction<any>) => {
+        state.errors.removePostErr = payload.message;
+        state.isLoadings.removePostLoading = false;
+      })
+      .addCase(removePost.fulfilled, (state, { payload }) => {
+        state.posts = state.posts.filter((post) => post.id !== payload);
+        state.errors.removePostErr = null;
+        state.isLoadings.removePostLoading = false;
       });
   },
 });
 
 export const {
-  removePost,
-  removePosts,
   setFavoritePost,
   setPostsPerPage,
   makeFiltersPosts,

@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { ChangeEvent } from 'react';
 import cn from 'classnames';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { TodoType, setCurrentTodo } from '../../store/todosSlice';
@@ -12,11 +12,6 @@ const Todo = ({ todo }: { todo: TodoType }) => {
   const dispatch = useAppDispatch();
 
   const { activeCheckboxesTodos } = useAppSelector((state) => state.checkboxesSlice);
-  const [isChangeAlbum, setIsChangeAlbum] = useState(false);
-
-  const handleRemove = () => {
-    dispatch(setShowModal({ typeModal: 'deleteTodo', id: todo.id }));
-  };
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.checked;

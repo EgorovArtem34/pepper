@@ -6,9 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { UserType } from '../../types';
 import Button from '../Button/Button';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import Loader from '../Loader/Loader';
-import './style.module.scss';
+import './changeAlbum.scss';
 import { AlbumType, changeAlbum } from '../../store/albumsSlice';
+import ModalLoader from '../Modals/components/ModalLoader/ModalLoader';
 
 type InputNameType = 'title' | 'userId';
 
@@ -21,7 +21,6 @@ const ChangeAlbum = ({ currentUser, album, setIsChangeAlbum }:
   const dispatch = useAppDispatch();
   const { users } = useAppSelector((state) => state.usersSlice);
   const {
-    errors: { changeAlbumErr },
     isLoadings: { changeAlbumLoading },
   } = useAppSelector((state) => state.albumsSlice);
   const userNamesIds = users.map((user) => [user.id, user.username]);
@@ -36,16 +35,17 @@ const ChangeAlbum = ({ currentUser, album, setIsChangeAlbum }:
     },
     validationSchema: signUpSchema,
     onSubmit: async (values) => {
-      const body = {
-        ...values,
-        userId: Number(values.userId),
-        id: album.id,
-      };
-      await dispatch(changeAlbum(body));
-      if (changeAlbumErr) {
-        toast.error(`submit error: ${changeAlbumErr}`);
+      try {
+        const body = {
+          ...values,
+          userId: Number(values.userId),
+          id: album.id,
+        };
+        await dispatch(changeAlbum(body));
+        toast.success('Альбом успешно обновлен');
+      } catch (err) {
+        toast.error('Ошибка при изменении альбома');
       }
-      toast.success('Альбом успешно обновлен');
       setIsChangeAlbum(false);
     },
   });
@@ -54,7 +54,7 @@ const ChangeAlbum = ({ currentUser, album, setIsChangeAlbum }:
   });
 
   if (changeAlbumLoading) {
-    return <Loader />;
+    return <ModalLoader />;
   }
   return (
     <form className="form" onSubmit={formik.handleSubmit}>

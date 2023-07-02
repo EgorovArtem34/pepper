@@ -9,6 +9,7 @@ import SetLikeAlbums from './components/SetLikeAlbums';
 import ShowPhoto from './components/ShowPhoto/ShowPhoto';
 import AddNewTodo from './components/AddNewTodo';
 import UpdateTodo from './components/UpdateTodo';
+import DeleteTodos from './components/DeleteTodos';
 
 const Modals = () => {
   const { isModalShow, typeModal, activePostId } = useAppSelector((state) => state.modalsSlice);
@@ -46,6 +47,8 @@ const Modals = () => {
       return <UpdateTodo typeChange="change" />;
     case 'completeTodo':
       return <UpdateTodo typeChange="complete" />;
+    case 'deleteTodos':
+      return <DeleteTodos />;
     default:
       return null;
   }

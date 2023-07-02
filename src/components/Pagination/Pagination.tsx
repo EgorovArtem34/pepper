@@ -1,7 +1,6 @@
-import { Pagination as BootstrapPagination } from 'react-bootstrap';
-import React, { useState } from 'react';
 import ResponsivePagination from 'react-responsive-pagination';
 import 'react-responsive-pagination/themes/classic.css';
+import './pagination.scss';
 
 type PaginationType = {
   currentPage: number;
@@ -14,6 +13,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationType) =
     current={currentPage}
     total={totalPages}
     onPageChange={(p) => onPageChange(p)}
+    className="pagination"
   />
 );
 

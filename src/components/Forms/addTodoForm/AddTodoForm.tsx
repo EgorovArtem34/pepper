@@ -4,17 +4,16 @@ import cn from 'classnames';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
-import Loader from '../../Loader/Loader';
 import Button from '../../Button/Button';
 import { setCloseModal } from '../../../store/modalsSlice';
 import { addTodo } from '../../../store/todosSlice';
 import '../filters.scss';
+import ModalLoader from '../../Modals/components/ModalLoader/ModalLoader';
 
 const AddTodoForm = () => {
   const dispatch = useAppDispatch();
   const { users } = useAppSelector((state) => state.usersSlice);
   const {
-    errors: { addTodoErr },
     isLoadings: { addTodoLoading },
   } = useAppSelector((state) => state.todosSlice);
   const userNamesIds = users.map((user) => [user.id, user.username]);
@@ -35,12 +34,13 @@ const AddTodoForm = () => {
         userId: Number(values.userId),
         completed: false,
       };
-      dispatch(addTodo(body));
-      if (addTodoErr) {
-        toast.error(`submit error: ${addTodoErr}`);
+      try {
+        await dispatch(addTodo(body));
+        toast.success('Задача успешно создана');
+        dispatch(setCloseModal());
+      } catch {
+        toast.error('Ошибка при создании');
       }
-      toast.success('Задача успешно создана');
-      dispatch(setCloseModal());
     },
   });
   const inputClass = () => cn('form__input', {
@@ -51,7 +51,7 @@ const AddTodoForm = () => {
   });
 
   if (addTodoLoading) {
-    return <Loader />;
+    return <ModalLoader />;
   }
   return (
     <form className="form" onSubmit={formik.handleSubmit}>

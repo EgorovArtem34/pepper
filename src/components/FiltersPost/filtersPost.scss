@@ -15,3 +15,35 @@
     flex-basis: 40%;
   }
 }
+
+@media screen and (max-width: 530px) {
+  
+  .filters {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  
+
+  .filters__form {
+    justify-content: center;
+  }
+
+  .select-label {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .sort-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px 20px;
+  }
+}
+
+

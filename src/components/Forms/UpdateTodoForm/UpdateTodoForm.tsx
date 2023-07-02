@@ -1,21 +1,19 @@
 import { useFormik } from 'formik';
-import { ClipLoader } from 'react-spinners';
 import * as yup from 'yup';
 import cn from 'classnames';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
-import Loader from '../../Loader/Loader';
 import Button from '../../Button/Button';
 import { setCloseModal } from '../../../store/modalsSlice';
 import { changeTodo } from '../../../store/todosSlice';
 import './updateTodoForm.scss';
+import ModalLoader from '../../Modals/components/ModalLoader/ModalLoader';
 
 const UpdateTodoForm = () => {
   const dispatch = useAppDispatch();
   const {
     currentTodo,
-    errors: { changeTodoErr },
     isLoadings: { changeTodoLoading },
   } = useAppSelector((state) => state.todosSlice);
   const signUpSchema = yup.object().shape({
@@ -34,11 +32,12 @@ const UpdateTodoForm = () => {
         completed: currentTodo?.completed,
         userId: currentTodo?.userId,
       };
-      await dispatch(changeTodo(body));
-      if (changeTodoErr) {
-        toast.error(`submit error: ${changeTodoErr}`);
+      try {
+        await dispatch(changeTodo(body));
+        toast.success('Задача успешно обновлена');
+      } catch {
+        toast.error('Ошибка при обновлении задачи');
       }
-      toast.success('Задача успешно обновлена');
       dispatch(setCloseModal());
     },
   });
@@ -47,11 +46,7 @@ const UpdateTodoForm = () => {
   });
 
   if (changeTodoLoading) {
-    return (
-      <div className="loader_center">
-        <ClipLoader color="#000" size={54} />
-      </div>
-    );
+    return <ModalLoader />;
   }
 
   return (

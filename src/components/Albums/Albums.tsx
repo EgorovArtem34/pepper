@@ -44,7 +44,14 @@ const Albums = () => {
     if (users.length === 0) {
       dispatch(fetchUsers());
     }
-  }, [dispatch, users.length]);
+
+    if (fetchAlbumsErr) {
+      toast.error('Ошибка при получение списка альбомов');
+    }
+    if (errorUsers) {
+      toast.error('Ошибка при получение списка юзеров');
+    }
+  }, [dispatch, users.length, errorUsers, fetchAlbumsErr]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -70,12 +77,7 @@ const Albums = () => {
   if (fetchAlbumsLoading || isLoadingUsers) {
     return <Loader />;
   }
-  if (fetchAlbumsErr) {
-    toast.error(`Error fetching albums: ${fetchAlbumsErr}`);
-  }
-  if (errorUsers) {
-    toast.error(`Error fetching users: ${errorUsers}`);
-  }
+
   const handlePageChange = (pageNumber: number) => {
     if (currentPage !== pageNumber) {
       setCurrentPage(pageNumber);
@@ -102,7 +104,9 @@ const Albums = () => {
       {currentAlbums.length === 0 ? (
         <p className="text_center">По вашему запросу ничего не найдено</p>
       ) : (
-        createAlbums()
+        <div className="card__albums">
+          {createAlbums()}
+        </div>
       )}
       <Pagination
         currentPage={currentPage}

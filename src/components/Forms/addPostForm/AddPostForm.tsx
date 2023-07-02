@@ -4,18 +4,17 @@ import cn from 'classnames';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
-import Loader from '../../Loader/Loader';
 import Button from '../../Button/Button';
 import { setCloseModal } from '../../../store/modalsSlice';
 import { InputNameType } from '../../../types';
 import '../filters.scss';
 import { addPost } from '../../../store/postsSlice';
+import ModalLoader from '../../Modals/components/ModalLoader/ModalLoader';
 
 const AddPostForm = () => {
   const dispatch = useAppDispatch();
   const { users } = useAppSelector((state) => state.usersSlice);
   const {
-    errors: { addPostErr },
     isLoadings: { addPostLoading },
   } = useAppSelector((state) => state.postsSlice);
   const userNamesIds = users.map((user) => [user.id, user.username]);
@@ -37,11 +36,12 @@ const AddPostForm = () => {
         ...values,
         userId: Number(values.userId),
       };
-      dispatch(addPost(body));
-      if (addPostErr) {
-        toast.error(`submit error: ${addPostErr}`);
+      try {
+        await dispatch(addPost(body));
+        toast.success('Пост успешно создан');
+      } catch {
+        toast.error('Ошибка при создании поста');
       }
-      toast.success('Пост успешно создан');
       dispatch(setCloseModal());
     },
   });
@@ -53,7 +53,7 @@ const AddPostForm = () => {
   });
 
   if (addPostLoading) {
-    return <Loader />;
+    return <ModalLoader />;
   }
   return (
     <form className="form" onSubmit={formik.handleSubmit}>

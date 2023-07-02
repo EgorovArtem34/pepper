@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { setCloseModal } from '../../../store/modalsSlice';
@@ -16,6 +18,7 @@ const SetLikePosts = () => {
       if (!(favorites.includes(id))) {
         dispatch(setFavoritePost(id));
         setFavoriteLocalStorage(id, true, 'favoritesPosts');
+        toast.success('Успешное добавление в избранное');
       }
     });
     dispatch(clearCheckboxesPosts());

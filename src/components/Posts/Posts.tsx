@@ -38,11 +38,20 @@ const Posts = () => {
   const [currentPosts, setCurrentPosts] = useState<PostType[]>([]);
 
   useEffect(() => {
-    dispatch(fetchPosts());
+    if (posts.length === 0) {
+      dispatch(fetchPosts());
+    }
     if (users.length === 0) {
       dispatch(fetchUsers());
     }
-  }, [dispatch, users.length]);
+
+    if (fetchPostsErr) {
+      toast.error('Ошибка при получение списка постов');
+    }
+    if (errorUsers) {
+      toast.error('Ошибка при получение списка юзеров');
+    }
+  }, [dispatch, users.length, posts.length, errorUsers, fetchPostsErr]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -56,7 +65,7 @@ const Posts = () => {
 
   useEffect(() => {
     dispatch(makeFiltersPosts(selectedPostFilters));
-  }, [dispatch, selectedPostFilters.queryParams, selectedPostFilters.status, posts]);
+  }, [dispatch, selectedPostFilters, posts]);
 
   useEffect(() => {
     const indexOfLastPost = currentPage * postsPerPage;
@@ -67,12 +76,6 @@ const Posts = () => {
 
   if (fetchPostsLoading || isLoadingUsers) {
     return <Loader />;
-  }
-  if (fetchPostsErr) {
-    toast.error(`Error fetching posts: ${fetchPostsErr}`);
-  }
-  if (errorUsers) {
-    toast.error(`Error fetching users: ${errorUsers}`);
   }
   const handlePageChange = (pageNumber: number) => {
     if (currentPage !== pageNumber) {
