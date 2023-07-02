@@ -7,6 +7,8 @@ import DeleteValue from './components/DeleteValue';
 import { defineTextModal } from '../../utils/utils';
 import SetLikeAlbums from './components/SetLikeAlbums';
 import ShowPhoto from './components/ShowPhoto/ShowPhoto';
+import AddNewTodo from './components/AddNewTodo';
+import UpdateTodo from './components/UpdateTodo';
 
 const Modals = () => {
   const { isModalShow, typeModal, activePostId } = useAppSelector((state) => state.modalsSlice);
@@ -38,6 +40,12 @@ const Modals = () => {
       return <SetLikeAlbums />;
     case 'showPhoto':
       return <ShowPhoto />;
+    case 'addNewTodo':
+      return <AddNewTodo />;
+    case 'updateTodo':
+      return <UpdateTodo typeChange="change" />;
+    case 'completeTodo':
+      return <UpdateTodo typeChange="complete" />;
     default:
       return null;
   }

@@ -11,6 +11,7 @@ import Modals from './components/Modals/Modals';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import AlbumsPage from './pages/AlbumsPage/AlbumsPage';
 import PhotosPage from './pages/PhotosPage/PhotosPage';
+import TodosPage from './pages/TodosPage/TodosPage';
 
 const App = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/albums" element={<AlbumsPage />} />
         <Route path="/albums/:id" element={<PhotosPage />} />
+        <Route path="/todos" element={<TodosPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <ToastContainer />

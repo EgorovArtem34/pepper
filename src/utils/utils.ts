@@ -55,6 +55,9 @@ export const setValuesPerPageLocalStorage = (valuesPerPage: number, type: string
     case 'albums':
       localStorage.setItem('albumsPerPage', JSON.stringify(valuesPerPage));
       break;
+    case 'todos':
+      localStorage.setItem('todosPerPage', JSON.stringify(valuesPerPage));
+      break;
     default: break;
   }
 };

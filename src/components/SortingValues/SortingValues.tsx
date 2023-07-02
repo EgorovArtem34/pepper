@@ -8,14 +8,14 @@ import {
   setSortBy,
   unsetSort,
 } from '../../store/filtersSlice';
-import './sortingPosts.scss';
+import './sortingValues.scss';
 
-interface SortingPostProps {
+interface SortingValuesType {
   sortTarget: keyof InitialFiltersStateType,
   selectedSort: AlbumsFiltersSortStateType | PostsFiltersStateType
 }
 
-const SortingPosts = ({ sortTarget, selectedSort }: SortingPostProps) => {
+const SortingValues = ({ sortTarget, selectedSort }: SortingValuesType) => {
   const dispatch = useAppDispatch();
   const { status, queryParams } = selectedSort;
   const { sortBy } = status;
@@ -35,26 +35,26 @@ const SortingPosts = ({ sortTarget, selectedSort }: SortingPostProps) => {
   };
 
   return (
-    <div className="sortingPosts">
-      <div className="sortingPosts__btnContainer">
-        <span className="sortingPosts__desc">Сортировать по</span>
-        <button onClick={() => handleSort('id')} className="sortingPosts__btn" type="button">
+    <div className="sort__interface">
+      <span className="sortingValues__desc">Сортировать по</span>
+      <div className="sort__buttons">
+        <button onClick={() => handleSort('id')} className="sortingValues__btn" type="button">
           Id
           {' '}
           {sortBy === 'id' && (sortOrder === 'ascend' ? '▲' : '▼')}
         </button>
-        <button onClick={() => handleSort('title')} className="sortingPosts__btn" type="button">
+        <button onClick={() => handleSort('title')} className="sortingValues__btn" type="button">
           Названию
           {' '}
           {sortBy === 'title' && (sortOrder === 'ascend' ? '▲' : '▼')}
         </button>
-        <button onClick={() => handleSort('userId')} className="sortingPosts__btn" type="button">
+        <button onClick={() => handleSort('userId')} className="sortingValues__btn" type="button">
           Автору
           {' '}
           {sortBy === 'userId' && (sortOrder === 'ascend' ? '▲' : '▼')}
         </button>
         {sortBy && (
-          <button onClick={handleResetSort} className="sortingPosts__btn" type="button">
+          <button onClick={handleResetSort} className="sortingValues__btn" type="button">
             Сбросить сортировку
             {' '}
             <span className="reset-icon">&#8634;</span>
@@ -65,4 +65,4 @@ const SortingPosts = ({ sortTarget, selectedSort }: SortingPostProps) => {
   );
 };
 
-export default SortingPosts;
+export default SortingValues;

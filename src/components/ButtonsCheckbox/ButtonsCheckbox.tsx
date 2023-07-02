@@ -3,7 +3,7 @@ import './buttonsCheckbox.scss';
 
 type ButtonsCheckboxType = {
   handleDelete: () => void;
-  handleFavorite: () => void;
+  handleFavorite?: () => void;
 };
 
 const ButtonsCheckbox = ({ handleDelete, handleFavorite }: ButtonsCheckboxType) => (
@@ -15,6 +15,7 @@ const ButtonsCheckbox = ({ handleDelete, handleFavorite }: ButtonsCheckboxType) 
     >
       Удалить
     </Button>
+    {handleFavorite && (
     <Button
       type="submit"
       className="form__button button__submit"
@@ -22,7 +23,12 @@ const ButtonsCheckbox = ({ handleDelete, handleFavorite }: ButtonsCheckboxType) 
     >
       В избранное
     </Button>
+    )}
   </div>
 );
+
+ButtonsCheckbox.defaultProps = {
+  handleFavorite: undefined,
+};
 
 export default ButtonsCheckbox;

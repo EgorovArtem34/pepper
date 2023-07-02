@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import Loader from '../Loader/Loader';
+import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { fetchPosts, makeFiltersPosts } from '../../store/postsSlice';
 import { createPageNumbers } from '../../utils/utils';
@@ -12,7 +14,7 @@ import { setShowModal } from '../../store/modalsSlice';
 import SelectPageCount from '../SelectPostPage/SelectPageCount';
 import FiltersPost from '../FiltersPost/FiltersPost';
 import { PostType } from '../../types';
-import SortingPosts from '../SortingPost/SortingPost';
+import SortingValues from '../SortingValues/SortingValues';
 import Pagination from '../Pagination/Pagination';
 import ButtonsCheckbox from '../ButtonsCheckbox/ButtonsCheckbox';
 
@@ -27,9 +29,11 @@ const Posts = () => {
     filteredPost,
     postsPerPage,
   } = useAppSelector((state) => state.postsSlice);
-  const { isLoading: isLoadingUsers, error: errorUsers, users } = useAppSelector(
-    (state) => state.usersSlice,
-  );
+  const {
+    isLoading: isLoadingUsers,
+    error: errorUsers,
+    users,
+  } = useAppSelector((state) => state.usersSlice);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPosts, setCurrentPosts] = useState<PostType[]>([]);
 
@@ -42,11 +46,17 @@ const Posts = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedPostFilters.queryParams, selectedPostFilters.status]);
+  }, [selectedPostFilters.queryParams, selectedPostFilters.status, postsPerPage]);
+
+  useEffect(() => {
+    if (currentPosts.length === 0) {
+      setCurrentPage(1);
+    }
+  }, [currentPosts.length]);
 
   useEffect(() => {
     dispatch(makeFiltersPosts(selectedPostFilters));
-  }, [dispatch, selectedPostFilters, posts]);
+  }, [dispatch, selectedPostFilters.queryParams, selectedPostFilters.status, posts]);
 
   useEffect(() => {
     const indexOfLastPost = currentPage * postsPerPage;
@@ -58,7 +68,12 @@ const Posts = () => {
   if (fetchPostsLoading || isLoadingUsers) {
     return <Loader />;
   }
-
+  if (fetchPostsErr) {
+    toast.error(`Error fetching posts: ${fetchPostsErr}`);
+  }
+  if (errorUsers) {
+    toast.error(`Error fetching users: ${errorUsers}`);
+  }
   const handlePageChange = (pageNumber: number) => {
     if (currentPage !== pageNumber) {
       setCurrentPage(pageNumber);
@@ -73,7 +88,6 @@ const Posts = () => {
 
   return (
     <Container>
-      {fetchPostsErr || errorUsers ? <span>{fetchPostsErr || errorUsers}</span> : null}
       <SelectPageCount
         type="posts"
         name="filter-postsPerPage"
@@ -90,7 +104,7 @@ const Posts = () => {
         >
           Создать пост
         </Button>
-        <SortingPosts
+        <SortingValues
           sortTarget="posts"
           selectedSort={selectedPostFilters}
         />

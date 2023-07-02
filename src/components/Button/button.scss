@@ -32,16 +32,16 @@
   }
 }
 
-.form__button_sort-btn {
-  position: absolute;
-}
-
 .photo-card__button {
-  border: none;
-  background-color: transparent;
   transition: transform 0.5s ease;
 
   &:hover {
     transform: scale(1.05);
   }
+}
+
+.todo__button,
+.photo-card__button {
+  border: none;
+  background-color: transparent;
 }

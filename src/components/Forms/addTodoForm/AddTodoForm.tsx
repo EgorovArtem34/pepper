@@ -7,52 +7,50 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import Loader from '../../Loader/Loader';
 import Button from '../../Button/Button';
 import { setCloseModal } from '../../../store/modalsSlice';
-import { InputNameType } from '../../../types';
+import { addTodo } from '../../../store/todosSlice';
 import '../filters.scss';
-import { addPost } from '../../../store/postsSlice';
 
-const AddPostForm = () => {
+const AddTodoForm = () => {
   const dispatch = useAppDispatch();
   const { users } = useAppSelector((state) => state.usersSlice);
   const {
-    errors: { addPostErr },
-    isLoadings: { addPostLoading },
-  } = useAppSelector((state) => state.postsSlice);
+    errors: { addTodoErr },
+    isLoadings: { addTodoLoading },
+  } = useAppSelector((state) => state.todosSlice);
   const userNamesIds = users.map((user) => [user.id, user.username]);
 
   const signUpSchema = yup.object().shape({
-    title: yup.string().required(),
-    body: yup.string().required().trim(),
+    title: yup.string().required().trim(),
     userId: yup.number().required(),
   });
   const formik = useFormik({
     initialValues: {
       title: '',
-      body: '',
       userId: 1,
     },
     validationSchema: signUpSchema,
     onSubmit: async (values) => {
       const body = {
-        ...values,
+        title: values.title,
         userId: Number(values.userId),
+        completed: false,
       };
-      dispatch(addPost(body));
-      if (addPostErr) {
-        toast.error(`submit error: ${addPostErr}`);
+      dispatch(addTodo(body));
+      if (addTodoErr) {
+        toast.error(`submit error: ${addTodoErr}`);
       }
-      toast.success('Пост успешно создан');
+      toast.success('Задача успешно создана');
       dispatch(setCloseModal());
     },
   });
-  const inputClass = (type: InputNameType) => cn('form__input', {
-    'form__input-error': formik.errors[type] && formik.touched[type],
+  const inputClass = () => cn('form__input', {
+    'form__input-error': formik.errors.userId && formik.touched.userId,
   });
   const textareaClass = () => cn('form__textarea', {
-    'form__input-error': formik.errors.body && formik.touched.body,
+    'form__input-error': formik.errors.title && formik.touched.title,
   });
 
-  if (addPostLoading) {
+  if (addTodoLoading) {
     return <Loader />;
   }
   return (
@@ -60,29 +58,15 @@ const AddPostForm = () => {
       <label htmlFor="title" className="form__label">
         Title
         <br />
-        <input
-          type="text"
+        <textarea
           name="title"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.title}
-          className={inputClass('title')}
-          required
-        />
-        {formik.errors.title && formik.touched.title && <p className="form__error-text">{formik.errors.title}</p>}
-      </label>
-      <label htmlFor="body" className="form__label">
-        Body
-        <br />
-        <textarea
-          name="body"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.body}
           className={textareaClass()}
           required
         />
-        {formik.errors.body && formik.touched.body && <p className="form__error-text">{formik.errors.body}</p>}
+        {formik.errors.title && formik.touched.title && <p className="form__error-text">{formik.errors.title}</p>}
       </label>
       <label htmlFor="userId" className="form__label">
         Author
@@ -92,7 +76,7 @@ const AddPostForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           defaultValue={formik.values.userId}
-          className={inputClass('userId')}
+          className={inputClass()}
           required
         >
           {userNamesIds.map((userNameId) => (
@@ -107,7 +91,7 @@ const AddPostForm = () => {
         <Button
           type="button"
           className="form__button button__back"
-          onClick={() => setCloseModal()}
+          onClick={() => dispatch(setCloseModal())}
         >
           Назад
         </Button>
@@ -123,4 +107,4 @@ const AddPostForm = () => {
   );
 };
 
-export default AddPostForm;
+export default AddTodoForm;

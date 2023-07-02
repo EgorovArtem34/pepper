@@ -1,4 +1,7 @@
 import { Pagination as BootstrapPagination } from 'react-bootstrap';
+import React, { useState } from 'react';
+import ResponsivePagination from 'react-responsive-pagination';
+import 'react-responsive-pagination/themes/classic.css';
 
 type PaginationType = {
   currentPage: number;
@@ -7,17 +10,11 @@ type PaginationType = {
 };
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationType) => (
-  <BootstrapPagination>
-    {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
-      <BootstrapPagination.Item
-        key={pageNumber}
-        active={pageNumber === currentPage}
-        onClick={() => onPageChange(pageNumber)}
-      >
-        {pageNumber}
-      </BootstrapPagination.Item>
-    ))}
-  </BootstrapPagination>
+  <ResponsivePagination
+    current={currentPage}
+    total={totalPages}
+    onPageChange={(p) => onPageChange(p)}
+  />
 );
 
 export default Pagination;

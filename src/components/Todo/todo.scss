@@ -1,0 +1,50 @@
+.todo {
+  display: flex;
+  padding: 15px;
+  list-style-type: none;
+  align-items: center;
+  border: 1px solid rgba(194, 188, 188, 0.5); 
+  margin-bottom: 10px;
+
+  >:last-child {
+    margin-left: auto; 
+  }
+}
+
+.todo_completed {
+  border: 3px solid rgb(164, 234, 164);
+  border-radius: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.todo__interface {
+  display: flex;
+  align-items: center;
+  
+  justify-content: center;
+}
+
+.todo__title {
+  margin: 0 7px;
+}
+
+.todo__interface svg,
+.bi.bi-check-circle {
+  width: 1em;
+  height: 1em;
+}
+
+
+svg .second-path {
+  opacity: 0;
+}
+
+svg:hover .second-path {
+  opacity: 1;
+}
+
+@media screen and (max-width: 400px) {
+  .todo {
+    padding: 5px;
+  }
+}

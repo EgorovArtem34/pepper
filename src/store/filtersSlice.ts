@@ -24,6 +24,7 @@ export type PostsFiltersStateType = {
   };
 };
 export type AlbumsFiltersSortStateType = PostsFiltersStateType;
+
 export type InitialFiltersStateType = {
   posts: PostsFiltersStateType;
   albums: AlbumsFiltersSortStateType;

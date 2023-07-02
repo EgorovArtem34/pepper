@@ -13,7 +13,7 @@ import Album from '../Album/Album';
 import { fetchUsers } from '../../store/usersSlice';
 import ButtonsCheckbox from '../ButtonsCheckbox/ButtonsCheckbox';
 import FiltersSortAlbums from '../FiltersSortAlbums/FiltersSortAlbums';
-import SortingPosts from '../SortingPost/SortingPost';
+import SortingValues from '../SortingValues/SortingValues';
 import './albums.scss';
 
 const Albums = () => {
@@ -48,7 +48,13 @@ const Albums = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, []);
+  }, [selectedAlbumsFilters, albumsPerPage]);
+
+  useEffect(() => {
+    if (currentAlbums.length === 0) {
+      setCurrentPage(1);
+    }
+  }, [currentAlbums.length]);
 
   useEffect(() => {
     dispatch(filterAndSortAlbums(selectedAlbumsFilters));
@@ -67,7 +73,9 @@ const Albums = () => {
   if (fetchAlbumsErr) {
     toast.error(`Error fetching albums: ${fetchAlbumsErr}`);
   }
-
+  if (errorUsers) {
+    toast.error(`Error fetching users: ${errorUsers}`);
+  }
   const handlePageChange = (pageNumber: number) => {
     if (currentPage !== pageNumber) {
       setCurrentPage(pageNumber);
@@ -77,7 +85,6 @@ const Albums = () => {
   const createAlbums = () => currentAlbums.map((album) => <Album album={album} key={album.id} />);
   return (
     <Container>
-      {fetchAlbumsErr || errorUsers ? <span>{fetchAlbumsErr || errorUsers}</span> : null}
       <SelectPageCount
         type="albums"
         name="filter-albumsPerPage"
@@ -86,10 +93,12 @@ const Albums = () => {
         place="select_albumsPage"
       />
       <FiltersSortAlbums />
-      <SortingPosts
-        sortTarget="albums"
-        selectedSort={selectedAlbumsFilters}
-      />
+      <div className="sort-container">
+        <SortingValues
+          sortTarget="albums"
+          selectedSort={selectedAlbumsFilters}
+        />
+      </div>
       {currentAlbums.length === 0 ? (
         <p className="text_center">По вашему запросу ничего не найдено</p>
       ) : (

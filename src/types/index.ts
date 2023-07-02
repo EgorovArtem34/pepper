@@ -16,7 +16,7 @@ export type PostsStateType = {
   errors: {
     fetchPostsErr: ErrorType;
     changePostErr: ErrorType;
-    addPost: ErrorType;
+    addPostErr: ErrorType;
   },
   isLoadings: {
     fetchPostsLoading: boolean;
@@ -76,6 +76,22 @@ export type UserType = {
 };
 
 export type InputNameType = 'title' | 'body' | 'userId';
+export type StatusFiltersTodosType = {
+  isFilterByTitleActive: boolean,
+  isFilterByByCompleted: boolean,
+  isFilterByWorking: boolean,
+};
+export type SortTodosType = 'completed' | 'unCompleted' | boolean;
+export type StatusSortTodosType = {
+  sortBy: boolean,
+};
+export type TodosFilterSortStateType = {
+  status: StatusFiltersTodosType & StatusSortTodosType;
+  queryParams: {
+    queryParamsByTitle: string | null;
+    sortOrder: SortTodosType | null | keyof StatusSortTodosType,
+  }
+};
 
 export type CommentsSelectorType = {
   comments: {

@@ -1,0 +1,22 @@
+.todos__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.todos-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.todos__filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.todos_list {
+  padding: 0;
+}

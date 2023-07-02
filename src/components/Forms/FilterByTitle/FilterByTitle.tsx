@@ -5,29 +5,61 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import '../filters.scss';
 import { makeFiltersPosts } from '../../../store/postsSlice';
 import { InitialFiltersStateType, setFilterByTitle, unsetFilterBy } from '../../../store/filtersSlice';
+import {
+  TodosArrayType,
+  makeFiltersAndSortTodos,
+  unsetFilterBy as unsetFilterTodosBy,
+  setFilterByTitle as setFilterTodosByTitle,
+} from '../../../store/todosSlice';
+import { filterAndSortAlbums } from '../../../store/albumsSlice';
 
-type FilterByTitleType = { filterBy: string, filterTarget: keyof InitialFiltersStateType };
+type FilterByTitleType = { filterBy: string, filterTarget: keyof InitialFiltersStateType | keyof TodosArrayType };
 
 const FilterByTitle = ({ filterBy, filterTarget }: FilterByTitleType) => {
   const dispatch = useAppDispatch();
   const [inputValue, setInputValue] = useState('');
-  const selectedPostFilters = useAppSelector((state) => state.filtersSlice.posts);
+  const selectedPostsFilters = useAppSelector((state) => state.filtersSlice.posts);
+  const selectedAlbumsFilters = useAppSelector((state) => state.filtersSlice.albums);
   const [showClearButton, setShowClearButton] = useState(false);
   const [searchTimeoutId, setSearchTimeoutId] = useState<number | null>(null);
   const timeout = 500;
 
   const handleSearch = (value: string) => {
-    if (!value) {
-      dispatch(unsetFilterBy({ target: filterTarget, filter: 'isFilterByTitleActive' }));
-      return;
+    switch (filterTarget) {
+      case 'todos':
+        if (!value) {
+          dispatch(unsetFilterTodosBy('isFilterByTitleActive'));
+        } else {
+          dispatch(setFilterTodosByTitle(value));
+        }
+        dispatch(makeFiltersAndSortTodos());
+        break;
+      case 'posts':
+      case 'albums':
+        if (!value) {
+          dispatch(unsetFilterBy({ target: filterTarget, filter: 'isFilterByTitleActive' }));
+        } else {
+          dispatch(setFilterByTitle({ target: filterTarget, value }));
+        }
+
+        if (filterTarget === 'posts') {
+          dispatch(makeFiltersPosts(selectedPostsFilters));
+        } else {
+          dispatch(filterAndSortAlbums(selectedAlbumsFilters));
+        }
+        break;
+      default: break;
     }
-    dispatch(setFilterByTitle({ target: filterTarget, value }));
-    dispatch(makeFiltersPosts(selectedPostFilters));
+    return null;
   };
 
   const handleClear = () => {
     setInputValue('');
-    dispatch(unsetFilterBy({ target: filterTarget, filter: 'isFilterByTitleActive' }));
+    if (filterTarget = 'todos') {
+      dispatch(unsetFilterTodosBy('isFilterByTitleActive'));
+    } else {
+      dispatch(unsetFilterBy({ target: filterTarget, filter: 'isFilterByTitleActive' }));
+    }
     setShowClearButton(false);
   };
 

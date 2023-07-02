@@ -57,7 +57,7 @@ const initialState: PostsStateType = {
   errors: {
     fetchPostsErr: null,
     changePostErr: null,
-    addPost: null,
+    addPostErr: null,
   },
   isLoadings: {
     fetchPostsLoading: false,
@@ -165,16 +165,16 @@ const postsSlice = createSlice({
       })
 
       .addCase(addPost.pending, (state) => {
-        state.errors.addPost = null;
+        state.errors.addPostErr = null;
         state.isLoadings.addPostLoading = true;
       })
       .addCase(addPost.rejected, (state, { payload }: PayloadAction<any>) => {
-        state.errors.addPost = payload;
+        state.errors.addPostErr = payload;
         state.isLoadings.addPostLoading = false;
       })
       .addCase(addPost.fulfilled, (state, { payload }) => {
         state.posts = [...state.posts, { ...payload, isNew: true }];
-        state.errors.addPost = null;
+        state.errors.addPostErr = null;
         state.isLoadings.addPostLoading = false;
       });
   },

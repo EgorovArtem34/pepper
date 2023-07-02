@@ -1,7 +1,10 @@
 .sort-container {
   display: flex;
-  justify-content: space-between;
+  align-items: end;
+  gap: 30px;
+  justify-content: center;
   position: relative;
+  margin-bottom: 20px;
 }
 
 .text_center {

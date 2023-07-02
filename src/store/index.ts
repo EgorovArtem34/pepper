@@ -7,6 +7,7 @@ import checkboxesSlice from './checkboxesSlice';
 import filtersSlice from './filtersSlice';
 import albumsSlice from './albumsSlice';
 import photosSlice from './photosSlice';
+import todosSlice from './todosSlice';
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     filtersSlice,
     albumsSlice,
     photosSlice,
+    todosSlice,
   },
 });
 
