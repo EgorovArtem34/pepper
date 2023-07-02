@@ -1,5 +1,5 @@
-import Header from '../../components/Header/Header';
-import Todos from '../../components/Todos/Todos';
+import Header from '../../components/CommonComponents/Header/Header';
+import Todos from '../../components/TodosComponents/Todos/Todos';
 
 const TodosPage = () => (
   <>

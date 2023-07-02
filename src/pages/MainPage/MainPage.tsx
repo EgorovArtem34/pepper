@@ -1,5 +1,5 @@
-import Header from '../../components/Header/Header';
-import Posts from '../../components/Posts/Posts';
+import Header from '../../components/CommonComponents/Header/Header';
+import Posts from '../../components/PostsComponents/Posts/Posts';
 import './mainpage.scss';
 
 const MainPage = () => (
