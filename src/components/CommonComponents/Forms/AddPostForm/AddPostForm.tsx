@@ -1,22 +1,19 @@
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import cn from 'classnames';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
-import Button from '../../Button/Button';
-import { setCloseModal } from '../../../../store/modalsSlice';
-import { InputNameType } from '../../../../types';
-import { addPost } from '../../../../store/postsSlice';
-import ModalLoader from '../../Modals/components/ModalLoader/ModalLoader';
-import '../filters.scss';
+import { useFormik } from "formik";
+import * as yup from "yup";
+import cn from "classnames";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/hooks";
+import Button from "../../Button/Button";
+import { setCloseModal } from "../../../../store/modalsSlice";
+import { InputNameType } from "../../../../types";
+import { addPost } from "../../../../store/postsSlice";
+import ModalLoader from "../../Modals/components/ModalLoader/ModalLoader";
+import "../filters.scss";
 
 const AddPostForm = () => {
   const dispatch = useAppDispatch();
   const { users } = useAppSelector((state) => state.usersSlice);
-  const {
-    isLoadings: { addPostLoading },
-  } = useAppSelector((state) => state.postsSlice);
   const userNamesIds = users.map((user) => [user.id, user.username]);
 
   const signUpSchema = yup.object().shape({
@@ -26,8 +23,8 @@ const AddPostForm = () => {
   });
   const formik = useFormik({
     initialValues: {
-      title: '',
-      body: '',
+      title: "",
+      body: "",
       userId: 1,
     },
     validationSchema: signUpSchema,
@@ -38,23 +35,22 @@ const AddPostForm = () => {
       };
       try {
         await dispatch(addPost(body));
-        toast.success('Пост успешно создан');
+        toast.success("Пост успешно создан");
       } catch {
-        toast.error('Ошибка при создании поста');
+        toast.error("Ошибка при создании поста");
       }
       dispatch(setCloseModal());
     },
   });
-  const inputClass = (type: InputNameType) => cn('form__input', {
-    'form__input-error': formik.errors[type] && formik.touched[type],
-  });
-  const textareaClass = () => cn('form__textarea', {
-    'form__input-error': formik.errors.body && formik.touched.body,
-  });
+  const inputClass = (type: InputNameType) =>
+    cn("form__input", {
+      "form__input-error": formik.errors[type] && formik.touched[type],
+    });
+  const textareaClass = () =>
+    cn("form__textarea", {
+      "form__input-error": formik.errors.body && formik.touched.body,
+    });
 
-  if (addPostLoading) {
-    return <ModalLoader />;
-  }
   return (
     <form className="form" onSubmit={formik.handleSubmit}>
       <label htmlFor="title" className="form__label">
@@ -66,10 +62,12 @@ const AddPostForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.title}
-          className={inputClass('title')}
+          className={inputClass("title")}
           required
         />
-        {formik.errors.title && formik.touched.title && <p className="form__error-text">{formik.errors.title}</p>}
+        {formik.errors.title && formik.touched.title && (
+          <p className="form__error-text">{formik.errors.title}</p>
+        )}
       </label>
       <label htmlFor="body" className="form__label">
         Body
@@ -82,7 +80,9 @@ const AddPostForm = () => {
           className={textareaClass()}
           required
         />
-        {formik.errors.body && formik.touched.body && <p className="form__error-text">{formik.errors.body}</p>}
+        {formik.errors.body && formik.touched.body && (
+          <p className="form__error-text">{formik.errors.body}</p>
+        )}
       </label>
       <label htmlFor="userId" className="form__label">
         Author
@@ -92,7 +92,7 @@ const AddPostForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           defaultValue={formik.values.userId}
-          className={inputClass('userId')}
+          className={inputClass("userId")}
           required
         >
           {userNamesIds.map((userNameId) => (
@@ -101,7 +101,9 @@ const AddPostForm = () => {
             </option>
           ))}
         </select>
-        {formik.errors.userId && formik.touched.userId && <p className="form__error-text">{formik.errors.userId}</p>}
+        {formik.errors.userId && formik.touched.userId && (
+          <p className="form__error-text">{formik.errors.userId}</p>
+        )}
       </label>
       <div className="form__button-wrap">
         <Button

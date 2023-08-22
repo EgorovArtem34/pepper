@@ -1,27 +1,31 @@
-import { useEffect, useState } from 'react';
-import { Container } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Loader from '../../CommonComponents/Loader/Loader';
-import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
-import { setShowModal } from '../../../store/modalsSlice';
-import { createPageNumbers } from '../../../utils/utils';
-import SelectPageCount from '../../PostsComponents/SelectPostPage/SelectPageCount';
-import Pagination from '../../CommonComponents/Pagination/Pagination';
-import { fetchUsers } from '../../../store/usersSlice';
-import ButtonsCheckbox from '../../CommonComponents/ButtonsCheckbox/ButtonsCheckbox';
-import './todos.scss';
+import { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Loader from "../../CommonComponents/Loader/Loader";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { setShowModal } from "../../../store/modalsSlice";
+import { createPageNumbers } from "../../../utils/utils";
+import SelectPageCount from "../../PostsComponents/SelectPostPage/SelectPageCount";
+import Pagination from "../../CommonComponents/Pagination/Pagination";
+import { fetchUsers } from "../../../store/usersSlice";
+import ButtonsCheckbox from "../../CommonComponents/ButtonsCheckbox/ButtonsCheckbox";
+import "./todos.scss";
 import {
-  TodoType, fetchTodos, makeFiltersAndSortTodos,
-} from '../../../store/todosSlice';
-import Todo from '../Todo/Todo';
-import FilterByTitle from '../../CommonComponents/Forms/FilterByTitle/FilterByTitle';
-import Button from '../../CommonComponents/Button/Button';
-import SortingTodos from '../SortingTodos/SortingTodos';
+  TodoType,
+  fetchTodos,
+  makeFiltersAndSortTodos,
+} from "../../../store/todosSlice";
+import Todo from "../Todo/Todo";
+import FilterByTitle from "../../CommonComponents/Forms/FilterByTitle/FilterByTitle";
+import Button from "../../CommonComponents/Button/Button";
+import SortingTodos from "../SortingTodos/SortingTodos";
 
 const Todos = () => {
   const dispatch = useAppDispatch();
-  const { activeCheckboxesTodos } = useAppSelector((state) => state.checkboxesSlice);
+  const { activeCheckboxesTodos } = useAppSelector(
+    (state) => state.checkboxesSlice
+  );
   const {
     isLoading: isLoadingUsers,
     error: errorUsers,
@@ -30,17 +34,10 @@ const Todos = () => {
   const {
     todos,
     filteredTodos,
-    errors: {
-      fetchTodosErr,
-    },
-    isLoadings: {
-      fetchTodosLoading,
-    },
+    errors: { fetchTodosErr },
+    isLoadings: { fetchTodosLoading },
     todosPerPage,
-    filtersAndSort: {
-      status,
-      queryParams,
-    },
+    filtersAndSort: { status, queryParams },
   } = useAppSelector((state) => state.todosSlice);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -55,10 +52,10 @@ const Todos = () => {
     }
 
     if (fetchTodosErr) {
-      toast.error('Ошибка при получение списка задач');
+      toast.error("Ошибка при получение списка задач");
     }
     if (errorUsers) {
-      toast.error('Ошибка при получение списка юзеров');
+      toast.error("Ошибка при получение списка юзеров");
     }
   }, [dispatch, users.length, errorUsers, fetchTodosErr, todos.length]);
 
@@ -92,10 +89,11 @@ const Todos = () => {
     }
   };
   const pageNumbers = createPageNumbers(filteredTodos.length, todosPerPage);
-  const createTodos = () => currentTodos.map((todo) => <Todo todo={todo} key={todo.id} />);
+  const createTodos = () =>
+    currentTodos.map((todo) => <Todo todo={todo} key={todo.id} />);
 
   const handleNewTodo = () => {
-    dispatch(setShowModal({ typeModal: 'addNewTodo' }));
+    dispatch(setShowModal({ typeModal: "addNewTodo" }));
   };
 
   return (
@@ -122,9 +120,7 @@ const Todos = () => {
         {currentTodos.length === 0 ? (
           <p className="text_center">По вашему запросу ничего не найдено</p>
         ) : (
-          <ul className="todos_list">
-            {createTodos()}
-          </ul>
+          <ul className="todos_list">{createTodos()}</ul>
         )}
         <Pagination
           currentPage={currentPage}
@@ -133,7 +129,9 @@ const Todos = () => {
         />
         {activeCheckboxesTodos.length > 0 ? (
           <ButtonsCheckbox
-            handleDelete={() => dispatch(setShowModal({ typeModal: 'deleteTodos' }))}
+            handleDelete={() =>
+              dispatch(setShowModal({ typeModal: "deleteTodos" }))
+            }
           />
         ) : null}
       </div>

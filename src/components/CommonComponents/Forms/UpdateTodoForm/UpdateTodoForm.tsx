@@ -1,21 +1,17 @@
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import cn from 'classnames';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
-import Button from '../../Button/Button';
-import { setCloseModal } from '../../../../store/modalsSlice';
-import { changeTodo } from '../../../../store/todosSlice';
-import './updateTodoForm.scss';
-import ModalLoader from '../../Modals/components/ModalLoader/ModalLoader';
+import { useFormik } from "formik";
+import * as yup from "yup";
+import cn from "classnames";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/hooks";
+import Button from "../../Button/Button";
+import { setCloseModal } from "../../../../store/modalsSlice";
+import { changeTodo } from "../../../../store/todosSlice";
+import "./updateTodoForm.scss";
 
 const UpdateTodoForm = () => {
   const dispatch = useAppDispatch();
-  const {
-    currentTodo,
-    isLoadings: { changeTodoLoading },
-  } = useAppSelector((state) => state.todosSlice);
+  const { currentTodo } = useAppSelector((state) => state.todosSlice);
   const signUpSchema = yup.object().shape({
     title: yup.string().required().trim(),
   });
@@ -34,20 +30,17 @@ const UpdateTodoForm = () => {
       };
       try {
         await dispatch(changeTodo(body));
-        toast.success('Задача успешно обновлена');
+        toast.success("Задача успешно обновлена");
       } catch {
-        toast.error('Ошибка при обновлении задачи');
+        toast.error("Ошибка при обновлении задачи");
       }
       dispatch(setCloseModal());
     },
   });
-  const textareaClass = () => cn('form__textarea', {
-    'form__input-error': formik.errors.title && formik.touched.title,
-  });
-
-  if (changeTodoLoading) {
-    return <ModalLoader />;
-  }
+  const textareaClass = () =>
+    cn("form__textarea", {
+      "form__input-error": formik.errors.title && formik.touched.title,
+    });
 
   return (
     <form className="form" onSubmit={formik.handleSubmit}>
@@ -62,7 +55,9 @@ const UpdateTodoForm = () => {
           className={textareaClass()}
           required
         />
-        {formik.errors.title && formik.touched.title && <p className="form__error-text">{formik.errors.title}</p>}
+        {formik.errors.title && formik.touched.title && (
+          <p className="form__error-text">{formik.errors.title}</p>
+        )}
       </label>
       <div className="form__button-wrap">
         <Button
